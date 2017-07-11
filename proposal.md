@@ -16,6 +16,8 @@
 
 ## Wireframe
 
+![Wire frame](./scr/wf.jpg)
+
 ## Challenges
 * Desing the board
 * Desing the dices
