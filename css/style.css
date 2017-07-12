@@ -144,6 +144,10 @@
     background-color:red;
     display: inline-block;
     margin: 2px;
+    font-stretch: 20px;
+    color: white;
+    background-size: cover;
+
 
 }
 

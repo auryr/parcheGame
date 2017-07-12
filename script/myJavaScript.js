@@ -1,4 +1,5 @@
-
+var diceImages=[];
+var arrayInfo=[];
 
 function createElement($parent,elementType,elementClass,elementId,content){
     let $createdElement = $(`<${elementType}>`,{id:elementId, class:elementClass,text:content});
@@ -10,11 +11,11 @@ function createBoard(){
     let index=0;
     let $element  =$("#mainDiv");
     //MAIN CONTAINER
-    const $scoreBar=createElement($element,"div","scoreBar","scoreBar","","");
-    const $dice1=createElement($scoreBar,"div","dice","dice1","","");
-    const $dice2=createElement($scoreBar,"div","dice","dice2","","");
+    const $scoreBar=createElement($element,"div","scoreBar","scoreBar","");
+    const $dice1=createElement($scoreBar,"div","dice","dice1","");
+    const $dice2=createElement($scoreBar,"div","dice","dice2","");
 
-    const $containerDiv=createElement($element,"div","containerDiv","containerDiv","","");
+    const $containerDiv=createElement($element,"div","containerDiv","containerDiv","");
 
     //SMALL CONTAINER TOP (
     var $middle=createElement($containerDiv,"div","middleContDiv","middleContDiv1","");
@@ -86,18 +87,48 @@ function createBoard(){
 
 }
 
+function rollDices(){
+    let id = setInterval(getValue, 200);
+    var times = 0;
+
+    function getValue(){
+        let valueDice1= Math.floor(Math.random()*6)+1;
+        let valueDice2= Math.floor(Math.random()*6)+1;
+        if(times<15){
+            times=times+1;
+            document.getElementById("dice1").innerHTML= valueDice1;
+            document.getElementById("dice2").style["background-image"]="url('images\\side2.jpg')";
+            document.getElementById("dice2").innerHTML= valueDice2;
+        }
+        else{
+            clearInterval(id);
+        }
+    }
+
+}
 
 function createPieces(){
     let $arrayPlayer=$(".player");
-
+    let k=0;
     for (let $element of $arrayPlayer){
         for (let i=1; i <= 4 ; i++){
-            createElement($($element),"div",`pieces player$A`,"piece"+i+$element.id,i);
+            createElement($($element),"div",`pieces playerA`,"piece"+i+$element.id,i);
         }
     }
+
+    while (k<6){
+        diceImages[k]="images/side"+(k+1) +".jpg";
+        k=k+1;
+    }
+
 }
 
 window.onload = function() {
     createBoard();
     createPieces();
+    rollDices();
+    for (let i=1; i<=4; i++){
+        arrayInfo[i-1]=prompt(`Player ${i} name`, `Player ${i}`);
+    }
+
 }
