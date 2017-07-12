@@ -1,0 +1,150 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@media  (max-width: 500px) {
+    body {
+        height: 500px;
+    }
+}
+
+
+@media  (max-width: 900px) {
+    body {
+        height: 850px;
+    }
+}
+
+.mainDiv{
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    display: flex;
+    margin: auto;
+    }
+
+.containerDiv{
+    width: 850px;
+    height: 850px;
+    background-color: black;
+    border:1px solid white;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+ }
+
+.scoreBar{
+    width: 15%;
+    height: 850px;
+    background-color:blue;
+}
+
+.middleContDiv{
+    width:100%;
+    height: 33.33%;
+    background-color: #00a98f;
+    border:1px solid white;
+    display: flex;
+    flex-direction:row;
+    flex-wrap: wrap;
+    margin: auto;
+ }
+
+
+.playerSquare{
+    width : 33.33%;
+    height: 100%;
+    background-color: transparent;
+    margin: auto;
+    display: flex;
+    position: relative;
+}
+
+.player{
+    width : 90%;
+    height: 90%;
+    background-color: #d4c99e;
+    margin: auto;
+    display: flex;
+    position: relative;
+    border-radius:50%;
+}
+
+.posSquare{
+    width:33.33%;
+    height: 100%;
+    background-color: white;
+    margin: auto;
+    display: flex;
+    border: 1px solid black;
+    position: relative;
+
+}
+
+
+.posSquareCol{
+    flex-direction: column;
+}
+
+
+.posSquareR{
+    height:33.33%;
+    width: 100%;
+}
+
+.posSquareRow{
+    flex-direction: row;
+}
+
+.position{
+    flex: 1;
+    width: 100%;
+    background-color: #d9e0e2;
+    margin: auto;
+    border: 1px solid white;
+    position: relative;
+}
+.position2{
+    height:100%;
+}
+
+.positionRow{
+    flex-direction: row;
+}
+
+.playerA{
+    background-color: #ffd900;
+}
+
+.playerB{
+    background-color: #013ca6;
+}
+
+.playerC{
+    background-color: green;
+}
+
+.playerD{
+    background-color: #ed1c16;
+}
+
+.pieces{
+    height: 20%;
+    width : 20%;
+    border-radius: 50%;
+    margin: auto;
+}
+
+.dice{
+    height: 60px;
+    width : 60px;
+    margin: auto;
+    background-color:red;
+    display: inline-block;
+    margin: 2px;
+
+}
+
+

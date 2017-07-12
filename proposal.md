@@ -1,8 +1,8 @@
 # Aury Rodriguez 07/12/2017<h1> 
-## Parche. <h2> 
-##  What is parche ? <h4>
+## My game:parcheesi. <h2> 
+##  What is parcheesi ? <h4>
 
-## Parche is a game that I used to play  when I was a child. It's an amazing family game, that everybody can have fun. Here are the rules.
+## Parcheesi is a game that I used to play  when I was a child. It's an amazing family game, that everybody can have fun. Here are the rules.
 * You need 2-4 players.
 * Each player would have four pieces.
 * Each player would be assigned a starting position on the board.
@@ -17,6 +17,8 @@
 ## Wireframe
 
 ![Wire frame](./scr/wf.jpg)
+
+![Wire frame](./scr/wf2.jpg)
 
 ## Challenges
 * Desing the board
@@ -40,10 +42,10 @@
 	- Desing the pieces
 	- Desing the players
 * CSS
-	- Stile Board
-	- Stile dices
-	- Stile the pieces
-	- Stile the players
+	- Style Board
+	- Style dices
+	- Style the pieces
+	- Style the players
 	- Animation for the dice to roll
 	- Animation for the pieces to move
 	- Animation for the player to move
