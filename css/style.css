@@ -17,6 +17,15 @@
     }
 }
 
+.h1{
+    color:#ee4c58;
+    font-size: 30px;
+    text-align: center;
+    width: 100%;
+
+
+  }
+
 .mainDiv{
     width: 100%;
     height: 100%;
@@ -39,6 +48,9 @@
     width: 15%;
     height: 850px;
     background-color:blue;
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .middleContDiv{
@@ -114,41 +126,60 @@
     flex-direction: row;
 }
 
-.playerA{
-    background-color: #ffd900;
+.playerYel{
+    background-color: yellow;
 }
 
-.playerB{
-    background-color: #013ca6;
+.playerBlu{
+    background-color: blue;
 }
 
-.playerC{
+.playerGre{
     background-color: green;
 }
 
-.playerD{
-    background-color: #ed1c16;
+.playerRed{
+    background-color: red;
 }
 
 .pieces{
-    height: 20%;
-    width : 20%;
+    height: 34px;
+    width : 34px;
     border-radius: 50%;
     margin: auto;
+    border:1px solid black;
 }
 
 .dice{
     height: 60px;
     width : 60px;
     margin: auto;
-    background-color:red;
+    background-color:transparent;
     display: inline-block;
     margin: 2px;
     font-stretch: 20px;
     color: white;
     background-size: cover;
+}
 
+.myButton{
+    width: 100%;
+    height: 50px;
+    border-radius: 5px;
+    background: #00b1c1;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px 30px ;
+    box-shadow: 0px 17px 10px  -10px rgba(0,0,0,0.4);
+    transition: all ease-in-out 150ms;
+    display: block;
+}
+
+.myButton:hover{
+    box-shadow: 0px 26px 26px  0px rgba(0,0,0,0.4);
+    transform: translateY(-2px);
 
 }
+
 
 
