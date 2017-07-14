@@ -25,7 +25,7 @@ function assingPlayers(id,name,start,jump,entrace,end){
 assingPlayers('playerYel','Yellow',38,68,34,90);
 assingPlayers('playerBlu','Blue',21,68, 17, 98);
 assingPlayers('playerGre','Green',55,68,92 ,83);
-assingPlayers('playerRed','Red',4, -1,75);
+assingPlayers('playerRed','Red',4, -1,68,75);
 
 
 function createElement($parent,elementType,elementClass,elementId,content){
@@ -85,18 +85,18 @@ function format(value,myChar,size){
 }
 
 function movePieces(steps,$movingPiece){
-    let myPlayer= $movingPiece.data('player');
+    //let myPlayer= $movingPiece.data('player');
     let currentPiece= $movingPiece.data('piece');
     let timer=200;
-    if (myPlayer!=arrayGameInfo[currentPLayer].playerId){
-        alert(`This is not your piece`);
-        return;
-    }
+    // if (myPlayer!=arrayGameInfo[currentPLayer].playerId){
+    //     alert(`This is not your piece`);
+    //     return;
+    // }
 
-    if (steps==0){
-        alert("You must roll the dices");
-        return;
-    }
+    // if (steps==0){
+    //     alert("You must roll the dices");
+    //     return;
+    // }
 
     let currentPos=arrayGameInfo[currentPLayer].currentPos[currentPiece];
 
@@ -131,14 +131,23 @@ function movePieces(steps,$movingPiece){
         alert("anoter player");
     },  steps*(timer+20));
 
-
-
 }
 
 function checkMovement($element){
+    let myPlayer= $element.data('player');
+    let currentPiece= $element.data('piece');
+
+    if (myPlayer!=arrayGameInfo[currentPLayer].playerId){
+        alert(`This is not your piece`);
+        return;
+    }
+
+    if (dicePoints==0){
+        alert("You must roll the dices");
+        return;
+    }
 
     movePieces(dicePoints,$element);
-
 
 }
 
@@ -168,6 +177,7 @@ window.onload = function() {
             checkMovement($($pieceIndex))  ;
         });
     }
+
     $score=$("#score");
     $turn = $("#turn");
     $turn.text(`Current player ${arrayGameInfo[currentPLayer].playerName}`);
@@ -176,9 +186,6 @@ window.onload = function() {
     for (let $position of $arrayElements){
         $($position).text(($($position).attr("id")).substring(9,11));
     }
-
-
-
 }
 
 function createBoard(){
@@ -193,7 +200,7 @@ function createBoard(){
 
     $dice2=createElement($ele,"div","dice","dice2","");
     $dice2.css("background-image",`url('images/side1.jpg`);
-    createElement($scoreBar,"button","myButton","rollDices","Roll dices");
+    createElement($scoreBar,"button","myButton","rollDices","ROLL DICES");
     createElement($scoreBar,"h1","h1","score","00");
     createElement($scoreBar,"h1","h1","turn","Player turn");
 
