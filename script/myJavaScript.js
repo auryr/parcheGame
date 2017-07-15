@@ -14,43 +14,43 @@ var $homeClastle;
 var $infoPositions;
 var $winner;
 
-function assignPlayers(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
-    let player={
-        playerId:id,
-        playerName:name,
-        statingPosition: startPos,
-        jumpPosition:jumpPos,
-        breakPosition:breakPos,
-        entrancePosition:entracePos,
-        endPosition: endPos, //entracePos+6,
-        currentPos:[startPos,startPos,startPos,startPos]
-    }
-    arrayGameInfo.push(player);
+// function assignPlayers(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
+//     let player={
+//         playerId:id,
+//         playerName:name,
+//         statingPosition: startPos,
+//         jumpPosition:jumpPos,
+//         breakPosition:breakPos,
+//         entrancePosition:entracePos,
+//         endPosition: endPos, //entracePos+6,
+//         currentPos:[startPos,startPos,startPos,startPos]
+//     }
+//     arrayGameInfo.push(player);
+// }
+
+
+// assignPlayers('playerYel','Yellow',38,68,34,84,88);
+// assignPlayers('playerBlu','Blue'  ,21,68,17,77,81);
+// assignPlayers('playerGre','Green' ,55,68,51,92,95);
+// assignPlayers('playerRed','Red'   ,04,-1,68,69,74);
+
+function gameStatus(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
+        this.playerId=id;
+        this.playerName=name;
+        this.statingPosition= startPos;
+        this.jumpPosition=jumpPos;
+        this.breakPosition=breakPos;
+        this.entrancePosition=entracePos;
+        this.endPosition= endPos;
+        this.currentPos=[startPos,startPos,startPos,startPos]
 }
 
+var yellowPlayer= new gameStatus('playerYel','Yellow',38,68,34,84,88);
+var bluePlayer= new gameStatus('playerBlu','Blue'  ,21,68,17,77,81);
+var greenPlayer= new gameStatus('playerGre','Green' ,55,68,51,92,95);
+var redPlayer= new gameStatus('playerRed','Red'   ,04,-1,68,69,74);
 
-assignPlayers('playerYel','Yellow',38,68,34,84,88);
-assignPlayers('playerBlu','Blue'  ,21,68,17,77,81);
-assignPlayers('playerGre','Green' ,55,68,51,92,95);
-assignPlayers('playerRed','Red'   ,04,-1,68,69,74);
-
-// function gameStatus(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
-//         this.playerId=id,
-//         this.playerName=name,
-//         this.statingPosition= startPos,
-//         this.jumpPosition=jumpPos,
-//         this.breakPosition=breakPos,
-//         this.entrancePosition=entracePos,
-//         this.endPosition= endPos,
-//         this.currentPos=[startPos,startPos,startPos,startPos]
-// }
-// var yellowPlayer= new gameStatus('playerYel','Yellow',38,68,34,84,88);
-// var bluePlayer= newg ameStatus('playerBlu','Blue'  ,21,68,17,77,81);
-// var greenPlayer= new gameStatus('playerGre','Green' ,55,68,51,92,95);
-// var redPlayer= new gameStatus('playerRed','Red'   ,04,-1,68,69,74);
-
-// arrayGameInfo.push(yellowPlayer,bluePlayer,greenPlayer),redPlayer;
-
+arrayGameInfo.push(yellowPlayer,bluePlayer,greenPlayer,redPlayer);
 
 function setGameValues(){
 
@@ -282,10 +282,6 @@ window.onload = function() {
 }
 
 
-function assignAttribute($element, attribute, value){
-    $($element).css(attribute,value);
-}
-
 function checkWinner(player){
     let $piecesInCastle=$(`#posSquare3 > .${player}`);
     if ($piecesInCastle.length===4){
@@ -305,14 +301,22 @@ function celebration(){
 }
 
 function traps(player,$position,$movingPiece){
-    let audio = new Audio('media/troll.mp3');
     let movedPlayer=false;
     let otherPlayer=$position.data("player");
 
-    if ($position.data("troll")==="troll" && player != otherPlayer){
+    if ($position.data("trap")==="troll" && player != otherPlayer){
+        let audio = new Audio('media/troll.mp3');
         audio.play();
         setTimeout(function(){$(`#${player}`).append($movingPiece)},2000);
         console.log(player + " has steped with a troll")
+    }
+    if ($position.data("trap")==="bomb" && player != otherPlayer){
+            alert("bomb");
+        let audio = new Audio('media/bomb.mp3');
+        audio.play();
+        $position.css("background-image","url('images/troll.jpg')");
+        setTimeout(function(){$(`#${player}`).append($movingPiece)},2000);
+        console.log(player + " has steped into a bomb")
     }
 }
 
@@ -362,13 +366,13 @@ function createBoard(){
     //SMALL CONTAINER TOP (
     let $middle=createElement($containerDiv,"div","middleContDiv","middleContDiv1","");
     $element=createElement($middle,"div","playerSquare playerYel","playerSquareYel","");
-    createElement($element,"div","player","playerYel","");
     createElement($element,"h2","h2","hPlayerYel","");
+    createElement($element,"div","player","playerYel","");
 
     let $posSquare1=createElement($middle,"div","posSquare","posSquare1","");
     $element=createElement($middle,"div","playerSquare playerBlu","playerSquareBlu","");
-    createElement($element,"div","player","playerBlu","");
     createElement($element,"h2","h2","hPlayerBlu","");
+    createElement($element,"div","player","playerBlu","");
 
     //SMALL CONTAINER CENTER
     $middle=createElement($containerDiv,"div","middleContDiv","middleContDiv2","");
@@ -446,14 +450,25 @@ function createBoard(){
     $("#position056").css("background-color","green");
     $("#position005").css("background-color","red");
 
-    $("#position039").data({'troll':"troll"});
-    $("#position022").data({'troll':"troll"});
-    $("#position056").data({'troll':"troll"});
-    $("#position005").data({'troll':"troll"});
+    $("#position039").data({'trap':"troll"});
+    $("#position022").data({'trap':"troll"});
+    $("#position056").data({'trap':"troll"});
+    $("#position005").data({'trap':"troll"});
 
     $("#position075").css("background-image","url('images/bridge.jpg')");
     $("#position082").css("background-image","url('images/bridge.jpg')");
     $("#position089").css("background-image","url('images/bridge.jpg')");
     $("#position096").css("background-image","url('images/bridge.jpg')");
+
+    for (index =1 ; index < 10 ; index++){
+        let trapPosition=Math.floor(Math.random()*96)+1;
+        $(`#position0${trapPosition}`).data({'trap':"bomb"});
+        //$(`#position0${trapPosition}`).css("background-image","url('images/bridge.jpg')");
+   }
+
 }
+
+// function assignAttributeBygruop(  , attribute, value){
+//      $(`#position0${trapPosition}`).css(attribute, value)
+// }
 
