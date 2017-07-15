@@ -89,7 +89,9 @@ function createPieces(){
     for (let $element of $arrayPlayer){
         for (let i=1; i <= 4 ; i++){
             let $piece =createElement($($element),"div",`pieces player${arrayClass[k]}`, `piece${arrayClass[k]}`+i);
+            $piece.css("background-image",`url('images/piece${arrayClass[k]}${i}.jpg')`);
             $piece.data({'player': $element.id ,"piece":i-1});
+
         }
         k++;
     }
@@ -291,7 +293,7 @@ function checkWinner(player){
 }
 
 function celebration(){
-    $($myModal).css("background-image" , `url('images/castle.gif`);
+    $($myModal).css("background-image" , `url('images/celebrate.gif`);
     $($myModal).css("display" , "block");
     $($winner).text(`${arrayGameInfo[currentPlayer].playerName} IS THE WINNER`);
 
@@ -310,11 +312,11 @@ function traps(player,$position,$movingPiece){
         setTimeout(function(){$(`#${player}`).append($movingPiece)},2000);
         console.log(player + " has steped with a troll")
     }
+
     if ($position.data("trap")==="bomb" && player != otherPlayer){
-            alert("bomb");
         let audio = new Audio('media/bomb.mp3');
         audio.play();
-        $position.css("background-image","url('images/troll.jpg')");
+        $position.css("background-image","url('images/bomb.jpg')");
         setTimeout(function(){$(`#${player}`).append($movingPiece)},2000);
         console.log(player + " has steped into a bomb")
     }
@@ -336,13 +338,13 @@ function retreatPieces(player,$position,$movingPiece){
     }
     if (movedPlayer){
         audio.play()
-
     }
 }
 
 function createBoard(){
     let index=0;
-    let $element  =$("#mainDiv");
+    let $element=$("#mainDiv");
+    let $playerImg;
 
     //left bar
     const $scoreBar=createElement($element,"div","scoreBar","scoreBar","");
@@ -366,31 +368,42 @@ function createBoard(){
     //SMALL CONTAINER TOP (
     let $middle=createElement($containerDiv,"div","middleContDiv","middleContDiv1","");
     $element=createElement($middle,"div","playerSquare playerYel","playerSquareYel","");
+    $element.css("background-image","url('images/forest.jpg')");
+
     createElement($element,"h2","h2","hPlayerYel","");
-    createElement($element,"div","player","playerYel","");
+    $playerImg=createElement($element,"div","player","playerYel","");
+    $playerImg.css("background-image","url('images/kingdomYel.jpg')");
 
     let $posSquare1=createElement($middle,"div","posSquare","posSquare1","");
     $element=createElement($middle,"div","playerSquare playerBlu","playerSquareBlu","");
+    $element.css("background-image","url('images/forest.jpg')");
     createElement($element,"h2","h2","hPlayerBlu","");
-    createElement($element,"div","player","playerBlu","");
+    $playerImg=createElement($element,"div","player","playerBlu","");
+    $playerImg.css("background-image","url('images/kingdomBlu.jpg')");
 
     //SMALL CONTAINER CENTER
     $middle=createElement($containerDiv,"div","middleContDiv","middleContDiv2","");
     let $posSquare2=createElement($middle,"div","posSquare posSquareCol","posSquare2","");
     $homeClastle=createElement($middle,"div","posSquare posSquareCol","posSquare3","");
     $homeClastle.css("flex-wrap","wrap");
+    $homeClastle.css("background-image","url('images/kingdomHome.jpg')");
+
 
     let $posSquare4=createElement($middle,"div","posSquare posSquareCol","posSquare4","");
 
     //SMALL CONTAINER BOTTOM
     $middle=createElement($containerDiv,"div","middleContDiv","middleContDiv3","");
     $element=createElement($middle,"div","playerSquare  playerGre","playerSquareGre","");
-    createElement($element,"div","player","playerGre","");
+    $element.css("background-image","url('images/forest.jpg')");
+    $playerImg=createElement($element,"div","player","playerGre","");
+    $playerImg.css("background-image","url('images/kingdomGre.jpg')");
     createElement($element,"h2","h2","hPlayerGre","");
 
     let $posSquare5=createElement($middle,"div","posSquare","posSquare5","");
     $element=createElement($middle,"div","playerSquare playerRed","playerSquareRed","");
-    createElement($element,"div","player","playerRed","");
+    $element.css("background-image","url('images/forest.jpg')");
+    $playerImg=createElement($element,"div","player","playerRed","");
+    $playerImg.css("background-image","url('images/kingdomRed.jpg')");
     createElement($element,"h2","h2","hPlayerRed","");
 
     //POSITIONS CONTAINERs
@@ -463,7 +476,7 @@ function createBoard(){
     for (index =1 ; index < 10 ; index++){
         let trapPosition=Math.floor(Math.random()*96)+1;
         $(`#position0${trapPosition}`).data({'trap':"bomb"});
-        //$(`#position0${trapPosition}`).css("background-image","url('images/bridge.jpg')");
+        //$(`#position0${trapPosition}`).css("transform","scaleY(-1)");
    }
 
 }
