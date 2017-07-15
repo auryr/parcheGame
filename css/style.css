@@ -26,7 +26,7 @@
   }
 
 
-.h1{
+.h2{
     color:#050f2c;
     font-size: 18px;
     text-align: center;
@@ -91,13 +91,13 @@
 }
 
 .player{
-    width : 80%;
+    width : 90%;
     height: 80%;
     background-color: #d4c99e;
     margin: auto;
     display: flex;
     position: relative;
-    border-radius:50%;
+    /*border-radius:50%;*/
 }
 
 .posSquare{

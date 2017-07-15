@@ -14,128 +14,6 @@ var $homeClastle;
 var $infoPositions;
 var $winner;
 
-
-function createBoard(){
-    let index=0;
-    let $element  =$("#mainDiv");
-
-    //left bar
-    const $scoreBar=createElement($element,"div","scoreBar","scoreBar","");
-    $myModal=createElement($element,"div","myModal","myModal","");
-    $protector=createElement($element,"div","myModal protector","myModal","");
-    $winner=createElement($myModal,"h1","hmain","winner","");
-
-    let $ele=createElement($scoreBar,"div","diceContainer","diceContainer","");
-    $dice1=createElement($ele,"div","dice","dice1","");
-    $dice1.css("background-image",`url('images/side1.jpg`);
-
-    $dice2=createElement($ele,"div","dice","dice2","");
-    $dice2.css("background-image",`url('images/side1.jpg`);
-    createElement($scoreBar,"button","myButton","rollDices","ROLL DICES");
-    createElement($scoreBar,"h1","h1","score","00");
-    createElement($scoreBar,"h1","h1","turn","");
-
-    //MAIN CONTAINER
-    const $containerDiv=createElement($element,"div","containerDiv","containerDiv","");
-
-    //SMALL CONTAINER TOP (
-    let $middle=createElement($containerDiv,"div","middleContDiv","middleContDiv1","");
-    $element=createElement($middle,"div","playerSquare playerYel","playerSquareYel","");
-    createElement($element,"div","player","playerYel","");
-    createElement($element,"h1","h1","hPlayerYel","");
-
-    let $posSquare1=createElement($middle,"div","posSquare","posSquare1","");
-    $element=createElement($middle,"div","playerSquare playerBlu","playerSquareBlu","");
-    createElement($element,"div","player","playerBlu","");
-    createElement($element,"h1","h1","hPlayerBlu","");
-
-    //SMALL CONTAINER CENTER
-    $middle=createElement($containerDiv,"div","middleContDiv","middleContDiv2","");
-    let $posSquare2=createElement($middle,"div","posSquare posSquareCol","posSquare2","");
-    $homeClastle=createElement($middle,"div","posSquare posSquareCol","posSquare3","");
-    $homeClastle.css("flex-wrap","wrap");
-
-    let $posSquare4=createElement($middle,"div","posSquare posSquareCol","posSquare4","");
-
-    //SMALL CONTAINER BOTTOM
-    $middle=createElement($containerDiv,"div","middleContDiv","middleContDiv3","");
-    $element=createElement($middle,"div","playerSquare  playerGre","playerSquareGre","");
-    createElement($element,"div","player","playerGre","");
-    createElement($element,"h1","h1","hPlayerGre","");
-
-    let $posSquare5=createElement($middle,"div","posSquare","posSquare5","");
-    $element=createElement($middle,"div","playerSquare playerRed","playerSquareRed","");
-    createElement($element,"div","player","playerRed","");
-    createElement($element,"h1","h1","hPlayerRed","");
-
-    //POSITIONS CONTAINERs
-    for (index = 4; index >=2; index--) {
-        createElement($posSquare4,"div","posSquare  posSquareR posSquareCol posSquareRow","line"+(index),"");
-        createElement($posSquare1,"div","posSquare posSquareCol ","line"+(index+3),"");
-    }
-
-    //POSITIONS CONTAINERs
-    for (index = 8; index <=10; index++) {
-        createElement($posSquare2,"div","posSquare  posSquareR posSquareCol posSquareRow","line"+(index),"");
-        if (index<10){
-            createElement($posSquare5,"div","posSquare posSquareCol ","line"+(index+3),"");
-        }
-    }
-    createElement($posSquare5,"div","posSquare posSquareCol ","line"+1,"");
-
-    //positions for ascending positions
-    for (index = 8; index >=1; index--) {
-        createElement($("#line1"),"div","position","position"+format(index,"0",3),"");
-        createElement($("#line4"),"div","position position2" ,"position"+format(index+17,"0",3),"");
-        createElement($("#line5"),"div","position","position"+format(index+25,"0",3),"");
-        createElement($("#line8"),"div","position position2","position"+format(index+42,"0",3),"");
-
-    }
-    createElement($("#line6"),"div","position","position"+format(34,"0",3),"");
-    createElement($("#line9"),"div","position position2","position"+51,"" );
-
-    //positions for decrecing positions
-    for (index = 9; index <=16; index++) {
-        createElement($("#line2"),"div","position position2","position"+format(index,"0",3),"");
-        createElement($("#line7"),"div","position","position"+format(index+26,"0",3),"");
-        createElement($("#line10"),"div","position position2","position"+format(index+43,"0",3),"");
-        createElement($("#line11"),"div","position","position"+format(index+51,"0",3),"");
-    }
-
-    for (index = 75; index >=69; index--) {
-        createElement($("#line12"),"div","position  playerRed","position"+format(index,"0",3),"");
-        createElement($("#line3"),"div","position position2 playerBlu","position"+format(index+7,"0",3),"");
-    }
-
-    createElement($("#line12"),"div","position","position"+format(68,"0",3),"");
-    createElement($("#line3"),"div","position position2","position"+format(17,"0",3),"");
-
-    for (index = 83; index <=89; index++) {
-        createElement($("#line6"),"div","position playerYel","position"+format(index,"0",3),"");
-        createElement($("#line9"),"div","position position2 playerGre","position"+format(index+7,"0",3),"");
-    }
-
-    $("#position039").css("background-image","url('images/troll.jpg')");
-    $("#position022").css("background-image","url('images/troll.jpg')");
-    $("#position056").css("background-image","url('images/troll.jpg')");
-    $("#position005").css("background-image","url('images/troll.jpg')");
-
-    $("#position039").css("background-color","yellow");
-    $("#position022").css("background-color","blue");
-    $("#position056").css("background-color","green");
-    $("#position005").css("background-color","red");
-
-    $("#position039").data({'troll':"troll"});
-    $("#position022").data({'troll':"troll"});
-    $("#position056").data({'troll':"troll"});
-    $("#position005").data({'troll':"troll"});
-
-    $("#position075").css("background-image","url('images/bridge.jpg')");
-    $("#position082").css("background-image","url('images/bridge.jpg')");
-    $("#position089").css("background-image","url('images/bridge.jpg')");
-    $("#position096").css("background-image","url('images/bridge.jpg')");
-}
-
 function assignPlayers(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
     let player={
         playerId:id,
@@ -151,6 +29,11 @@ function assignPlayers(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
 }
 
 
+assignPlayers('playerYel','Yellow',38,68,34,84,88);
+assignPlayers('playerBlu','Blue'  ,21,68,17,77,81);
+assignPlayers('playerGre','Green' ,55,68,51,92,95);
+assignPlayers('playerRed','Red'   ,04,-1,68,69,74);
+
 // function gameStatus(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
 //         this.playerId=id,
 //         this.playerName=name,
@@ -158,23 +41,16 @@ function assignPlayers(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
 //         this.jumpPosition=jumpPos,
 //         this.breakPosition=breakPos,
 //         this.entrancePosition=entracePos,
-//         this.endPosition: endPos, //entracePos+6,
-//         this.currentPos:[startPos,startPos,startPos,startPos]
+//         this.endPosition= endPos,
+//         this.currentPos=[startPos,startPos,startPos,startPos]
 // }
-// gameStatus('playerYel','Yellow',38,68,34,84,88);
-// gameStatus('playerBlu','Blue'  ,21,68,17,77,81);
-// gameStatus('playerGre','Green' ,55,68,51,92,95);
-// gameStatus('playerRed','Red'   ,04,-1,68,69,74);
+// var yellowPlayer= new gameStatus('playerYel','Yellow',38,68,34,84,88);
+// var bluePlayer= newg ameStatus('playerBlu','Blue'  ,21,68,17,77,81);
+// var greenPlayer= new gameStatus('playerGre','Green' ,55,68,51,92,95);
+// var redPlayer= new gameStatus('playerRed','Red'   ,04,-1,68,69,74);
 
-arrayGameInfo.push(player);
+// arrayGameInfo.push(yellowPlayer,bluePlayer,greenPlayer),redPlayer;
 
-
-// function gameStatus(playerName, position, score, age, eyecolor) {
-//     this.name = playerName;
-//     this.position = position;
-//     this.score = score;
-//     this.eyeColor = eyecolor;
-// }
 
 function setGameValues(){
 
@@ -460,4 +336,124 @@ function retreatPieces(player,$position,$movingPiece){
     }
 }
 
+function createBoard(){
+    let index=0;
+    let $element  =$("#mainDiv");
+
+    //left bar
+    const $scoreBar=createElement($element,"div","scoreBar","scoreBar","");
+    $myModal=createElement($element,"div","myModal","myModal","");
+    $protector=createElement($element,"div","myModal protector","myModal","");
+    $winner=createElement($myModal,"h1","hmain","winner","");
+
+    let $ele=createElement($scoreBar,"div","diceContainer","diceContainer","");
+    $dice1=createElement($ele,"div","dice","dice1","");
+    $dice1.css("background-image",`url('images/side1.jpg`);
+
+    $dice2=createElement($ele,"div","dice","dice2","");
+    $dice2.css("background-image",`url('images/side1.jpg`);
+    createElement($scoreBar,"button","myButton","rollDices","ROLL DICES");
+    createElement($scoreBar,"h1","h1","score","00");
+    createElement($scoreBar,"h1","h1","turn","");
+
+    //MAIN CONTAINER
+    const $containerDiv=createElement($element,"div","containerDiv","containerDiv","");
+
+    //SMALL CONTAINER TOP (
+    let $middle=createElement($containerDiv,"div","middleContDiv","middleContDiv1","");
+    $element=createElement($middle,"div","playerSquare playerYel","playerSquareYel","");
+    createElement($element,"div","player","playerYel","");
+    createElement($element,"h2","h2","hPlayerYel","");
+
+    let $posSquare1=createElement($middle,"div","posSquare","posSquare1","");
+    $element=createElement($middle,"div","playerSquare playerBlu","playerSquareBlu","");
+    createElement($element,"div","player","playerBlu","");
+    createElement($element,"h2","h2","hPlayerBlu","");
+
+    //SMALL CONTAINER CENTER
+    $middle=createElement($containerDiv,"div","middleContDiv","middleContDiv2","");
+    let $posSquare2=createElement($middle,"div","posSquare posSquareCol","posSquare2","");
+    $homeClastle=createElement($middle,"div","posSquare posSquareCol","posSquare3","");
+    $homeClastle.css("flex-wrap","wrap");
+
+    let $posSquare4=createElement($middle,"div","posSquare posSquareCol","posSquare4","");
+
+    //SMALL CONTAINER BOTTOM
+    $middle=createElement($containerDiv,"div","middleContDiv","middleContDiv3","");
+    $element=createElement($middle,"div","playerSquare  playerGre","playerSquareGre","");
+    createElement($element,"div","player","playerGre","");
+    createElement($element,"h2","h2","hPlayerGre","");
+
+    let $posSquare5=createElement($middle,"div","posSquare","posSquare5","");
+    $element=createElement($middle,"div","playerSquare playerRed","playerSquareRed","");
+    createElement($element,"div","player","playerRed","");
+    createElement($element,"h2","h2","hPlayerRed","");
+
+    //POSITIONS CONTAINERs
+    for (index = 4; index >=2; index--) {
+        createElement($posSquare4,"div","posSquare  posSquareR posSquareCol posSquareRow","line"+(index),"");
+        createElement($posSquare1,"div","posSquare posSquareCol ","line"+(index+3),"");
+    }
+
+    //POSITIONS CONTAINERs
+    for (index = 8; index <=10; index++) {
+        createElement($posSquare2,"div","posSquare  posSquareR posSquareCol posSquareRow","line"+(index),"");
+        if (index<10){
+            createElement($posSquare5,"div","posSquare posSquareCol ","line"+(index+3),"");
+        }
+    }
+    createElement($posSquare5,"div","posSquare posSquareCol ","line"+1,"");
+
+    //positions for ascending positions
+    for (index = 8; index >=1; index--) {
+        createElement($("#line1"),"div","position","position"+format(index,"0",3),"");
+        createElement($("#line4"),"div","position position2" ,"position"+format(index+17,"0",3),"");
+        createElement($("#line5"),"div","position","position"+format(index+25,"0",3),"");
+        createElement($("#line8"),"div","position position2","position"+format(index+42,"0",3),"");
+
+    }
+    createElement($("#line6"),"div","position","position"+format(34,"0",3),"");
+    createElement($("#line9"),"div","position position2","position"+51,"" );
+
+    //positions for decrecing positions
+    for (index = 9; index <=16; index++) {
+        createElement($("#line2"),"div","position position2","position"+format(index,"0",3),"");
+        createElement($("#line7"),"div","position","position"+format(index+26,"0",3),"");
+        createElement($("#line10"),"div","position position2","position"+format(index+43,"0",3),"");
+        createElement($("#line11"),"div","position","position"+format(index+51,"0",3),"");
+    }
+
+    for (index = 75; index >=69; index--) {
+        createElement($("#line12"),"div","position  playerRed","position"+format(index,"0",3),"");
+        createElement($("#line3"),"div","position position2 playerBlu","position"+format(index+7,"0",3),"");
+    }
+
+    createElement($("#line12"),"div","position","position"+format(68,"0",3),"");
+    createElement($("#line3"),"div","position position2","position"+format(17,"0",3),"");
+
+    for (index = 83; index <=89; index++) {
+        createElement($("#line6"),"div","position playerYel","position"+format(index,"0",3),"");
+        createElement($("#line9"),"div","position position2 playerGre","position"+format(index+7,"0",3),"");
+    }
+
+    $("#position039").css("background-image","url('images/troll.jpg')");
+    $("#position022").css("background-image","url('images/troll.jpg')");
+    $("#position056").css("background-image","url('images/troll.jpg')");
+    $("#position005").css("background-image","url('images/troll.jpg')");
+
+    $("#position039").css("background-color","yellow");
+    $("#position022").css("background-color","blue");
+    $("#position056").css("background-color","green");
+    $("#position005").css("background-color","red");
+
+    $("#position039").data({'troll':"troll"});
+    $("#position022").data({'troll':"troll"});
+    $("#position056").data({'troll':"troll"});
+    $("#position005").data({'troll':"troll"});
+
+    $("#position075").css("background-image","url('images/bridge.jpg')");
+    $("#position082").css("background-image","url('images/bridge.jpg')");
+    $("#position089").css("background-image","url('images/bridge.jpg')");
+    $("#position096").css("background-image","url('images/bridge.jpg')");
+}
 
