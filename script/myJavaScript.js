@@ -10,6 +10,9 @@ var $dice2;
 var arrayGameInfo=[];
 var $myModal;
 var $homeClastle;
+var $infoPositions;
+var $winner;
+
 
 
 function createBoard(){
@@ -19,6 +22,7 @@ function createBoard(){
     //left bar
     const $scoreBar=createElement($element,"div","scoreBar","scoreBar","");
     $myModal=createElement($element,"div","myModal","myModal","");
+    $winner=createElement($myModal,"div","h1","winner","");
     let $ele=createElement($scoreBar,"div","diceContainer","diceContainer","");
     $dice1=createElement($ele,"div","dice","dice1","");
     $dice1.css("background-image",`url('images/side1.jpg`);
@@ -130,16 +134,16 @@ function assignPlayers(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
         breakPosition:breakPos,
         entrancePosition:entracePos,
         endPosition:entracePos+6,
-//        currentPos:[startPos,startPos,startPos,startPos]
-        currentPos:[38,38,38,38]
+        currentPos:[startPos,startPos,startPos,startPos]
+//        currentPos:[38,38,38,38]
     }
     arrayGameInfo.push(player);
 }
 
 assignPlayers('playerYel','Yellow',38,68,34,84);
-assignPlayers('playerBlu','Blue',21,68, 17, 77);
-assignPlayers('playerGre','Green',55,68,51 ,92);
-assignPlayers('playerRed','Red',4, -1,68,69);
+assignPlayers('playerBlu','Blue'  ,21,68,17,77);
+assignPlayers('playerGre','Green' ,55,68,51,92);
+assignPlayers('playerRed','Red'   ,04,-1,68,69);
 
 
 function createElement($parent,elementType,elementClass,elementId,content){
@@ -151,7 +155,7 @@ function createElement($parent,elementType,elementClass,elementId,content){
 function createPieces(){
     let $arrayPlayer=$(".player");
     let arrayClass=["Yel","Blu","Gre","Red"];
-    k=0;
+    let k=0;
     for (let $element of $arrayPlayer){
         for (let i=1; i <= 4 ; i++){
             let $piece =createElement($($element),"div",`pieces player${arrayClass[k]}`, `piece${arrayClass[k]}`+i);
@@ -167,11 +171,15 @@ function rollDices(){
         alert("You already rolled the dice. Move the piece");
         return;
     }
+    var audio = new Audio('media/rolling.mp3');
+    //audio.play()
     let id = setInterval(getValue, 120);
     let times=0;
+
     function getValue(){
         let valueDice1= Math.floor(Math.random()*6)+1;
         let valueDice2= Math.floor(Math.random()*6)+1;
+
         if(times<=15){
             times=times+1;
             $dice1.css("background-image",`url('${diceImages[valueDice1-1]}')`);
@@ -222,14 +230,19 @@ function movePieces(steps,$movingPiece){
     let timer=250;
     var winningGame=false;
 
+
     let currentPos=arrayGameInfo[currentPlayer].currentPos[currentPiece];
 
     let pos=0;
     let id = setInterval(nextPos, timer);
+
+    steps=73;
+    //currentPos=37;
     function nextPos(){
+        let homePosition =false;
         currentPos++;
         pos++;
-        alert(steps);
+
         // check jumpins position
         if (currentPos-1 === arrayGameInfo[currentPlayer].jumpPosition){
             currentPos=1;
@@ -246,23 +259,25 @@ function movePieces(steps,$movingPiece){
         // check end position.
         if (currentPos-1 >arrayGameInfo[currentPlayer].endPosition){
             //moving to castle(home)
+            homePosition=true;
             $newParent=$homeClastle;
             setTimeout(function(){winningGame=checkWinner($movingPiece.data('player'))},50)
         }
 
         $newParent.append($child);
-        retreatPieces($movingPiece.data('player'),$newParent,$movingPiece);
 
         //reasingning values
         if (winningGame){
-            alert("fwrw");
             dicePoints-=pos;
             steps=pos;
         }
-
+        //
         if(pos===steps){
             arrayGameInfo[currentPlayer].currentPos[currentPiece]=currentPos;
             clearInterval(id);
+            if (!homePosition) {
+                retreatPieces($movingPiece.data('player'),$newParent,$movingPiece);
+            }
             //$("#rollDices").prop("disabled", false);;
         }
     }
@@ -270,7 +285,7 @@ function movePieces(steps,$movingPiece){
     //making sure this part doesn't execute until the piece is moved
     setTimeout( function(){
         if(!anotherChance){
-           //currentPlayer===3 ? currentPlayer=0 : currentPlayer++;
+           currentPlayer===3 ? currentPlayer=0 : currentPlayer++;
         }
         $turn.text(`Player turn : ${arrayGameInfo[currentPlayer].playerName}`);
         dicePoints=0;
@@ -282,21 +297,24 @@ window.onload = function() {
     createBoard();
     createPieces();
 
+    var audio = new Audio('media/entranceSound.mp3');
+    //audio.play()
+
     let i=0;
     //array with the images
     while (i<6){
         diceImages[i]="images/side"+(i+1) +".jpg";
         i++;
     }
-
+    // getting players name
     for (i=1; i<=4; i++){
         //arrayGameInfo[i-1].playerName=prompt(`Player ${i} name`, `Player ${i}`);
     }
 
     // adding the events
-    $("#rollDices").on("click", function(){    //$("#rollDices").prop("disabled", true);;
+    $("#rollDices").on("click", function(){
+       //$("#rollDices").prop("disabled", true);;
         rollDices();
-
     });
 
     let $arrayPieces=$(".pieces");
@@ -311,20 +329,19 @@ window.onload = function() {
 
     })
 
-
     $score=$("#score");
     $turn = $("#turn");
     $turn.text(`Player's turn ${arrayGameInfo[currentPlayer].playerName}`);
-
-    // $arrayPositions=$(".position");
-    // for (let $position of $arrayPositions){
-    //     $($position).text(($($position).attr("id")).substring(8,11));
-    // }
+    //presenting the pos number
+    ß$arrayPositions=$(".position");
+    for (let $position of $arrayPositions){
+        $($position).text(($($position).attr("id")).substring(8,11));
+    }
 }
 
 
 function assignAttribute($element, attribute, value){
-      $($element).css(attribute,value);
+    $($element).css(attribute,value);
 }
 
 function checkWinner(player){
@@ -340,47 +357,39 @@ function celebration(){
     alert("${arrayGameInfo[currentPlayer].playerName} IS THE WINNER");
     $($myModal).css("background-image" , `url('images/castle.gif`)
     $($myModal).css("display" , "block")
+    $($winner).text("${arrayGameInfo[currentPlayer].playerName} IS THE WINNER");
 
     var audio = new Audio('media/winningsound.mp3');
-    audio.play()
-   //play sound
+    //audio.play()
 
 }
 
+function traps(player,$position,$movingPiece){
+    let $elementsInthePosition=$("> div",$position);
+    let otherPlayer;
 
-function traps(){
-
+    for(let index=0; index < $elementsInthePosition.length; index++){
+        otherPlayer=$(`#${$elementsInthePosition[index].id}`).data("player");
+        if  (otherPlayer != player){
+            $(`#${otherPlayer}`).append($elementsInthePosition[index]);
+            console.log( "Clid", $("#"+$elementsInthePosition[index].id).data("player"), "current", player)
+        }
+    }
 }
 
 
 function retreatPieces(player,$position,$movingPiece){
-    // for (let indexObj=0; indexObj< arrayGameInfo.length ; indexObj++){
-    //     for (let subIndex=0; subIndex< arrayGameInfo[indexObj].currentPos.length;subIndex++){
-    //         if (iarrayGameInfo[ndexObj].playerId!=player && indexObj.currentPos[subIndex]){
-    //             console.log(iarrayGameInfo[indexObj].currentPos[subIndex]);
-    //         }
-    //     }
-    // }
-    let $elementsInthePosition=$position.children('div');
-    for(let child=0; child < $elementsInthePosition.length; child++){
-           // if( $elementsInthePosition[child].data('player')!= player){
-           //      alert("move");
-           // }
+    let $elementsInthePosition=$("> div",$position);
+    let otherPlayer;
+
+    for(let index=0; index < $elementsInthePosition.length; index++){
+        otherPlayer=$(`#${$elementsInthePosition[index].id}`).data("player");
+        if  (otherPlayer != player){
+            $(`#${otherPlayer}`).append($elementsInthePosition[index]);
+            console.log( "Clid", $("#"+$elementsInthePosition[index].id).data("player"), "current", player)
+        }
     }
-    // let $piecesInCastle=$(`#${$position.id} > .pieces`);
-    // alert(piecesInCastle.length);
-    // for (let $piece of $piecesInCastle){
-    //     let playerPiece=$piece.data('player');
-    //     alert(player);
-    //     // alert(playerPiece);
-    //     // if (playerPiece!==player){
-    //     //     alert("Moveeeee")
-    //     // }
-    // }
-
-
 }
-
 
 
 function resetGame(){
