@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Times new Roman';
+    font-family: 'MedievalSharp','Times new Roman','Helvetica', 'sans-serif';
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-color: transparent;
@@ -36,6 +36,7 @@
     font-size: 18px;
     text-align: center;
     width: 100%;
+    margin: 2px;
     font-family: 'MedievalSharp','Times new Roman','Helvetica', 'sans-serif';
   }
 
@@ -52,7 +53,6 @@
 .mainDiv{
     width: 100%;
     height: 100%;
-    background-color: black;
     display: flex;
     margin: auto;
     }
@@ -60,7 +60,6 @@
 .containerDiv{
     width: 76%;
     height: 800px;
-    background-color: black;
     border:1px solid white;
     display: flex;
     flex-direction: column;
@@ -70,7 +69,6 @@
 .Bar{
     height: 800px;
     width: 12%;
-    background-color:blue;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -79,8 +77,6 @@
 .middleContDiv{
     width:100%;
     height: 33.33%;
-    background-color: #00a98f;
-    /*border:1px solid white;*/
     display: flex;
     flex-direction:row;
     flex-wrap: wrap;
@@ -91,7 +87,6 @@
 .playerSquare{
     width : 33.33%;
     height: 100%;
-    background-color: transparent;
     margin: auto;
     display: flex;
     flex-direction: column;
@@ -103,7 +98,6 @@
 .player{
     width : 90%;
     height: 80%;
-    background-color: #d4c99e;
     margin: auto;
     display: flex;
     position: relative;
@@ -114,11 +108,9 @@
 .posSquare{
     width:33.33%;
     height: 100%;
-    background-color: white;
     margin: auto;
     display: flex;
     position: relative;
-
 }
 
 
@@ -139,7 +131,7 @@
 .position{
     flex: 1;
     width: 100%;
-    background-color: #d9e0e2;
+    background-color: transparent;
     margin: auto;
     display: flex;
     border: 1px solid white;
@@ -156,26 +148,22 @@
 }
 
 .playerYel{
-    /*background-color: yellow;*/
-    border:1px solid yellow;
+   /* border:1px solid yellow;*/
     color:yellow;
 }
 
 .playerBlu{
-    /*background-color: blue;*/
-    border:1px solid blue;
+    /*border:1px solid blue;*/
     color: blue
 }
 
 .playerGre{
-    /*background-color: green;*/
-    border:1px solid green;
+    /*border:1px solid green;*/
     color : green;
 }
 
 .playerRed{
-    /*background-color: red;*/
-    border:1px solid red;
+    /*border:1px solid red;*/
     color : red;
 }
 
@@ -189,7 +177,6 @@
     height: 60px;
     width : 60px;
     margin: auto;
-    background-color:transparent;
     display: inline-block;
     margin: 2px;
     font-stretch: 20px;
@@ -223,7 +210,6 @@
     z-index: 1;
     width: 100%;
     height: 100%;
-    background-color: white;
     top:0 ;
     left: 0%;
     border: 8px solid silver;
