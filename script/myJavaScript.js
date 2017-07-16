@@ -13,27 +13,9 @@ var $protector;
 var $homeClastle;
 var $infoPositions;
 var $winner;
+var arrayClass=["Yel","Blu","Gre","Red"];
 
-// function assignPlayers(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
-//     let player={
-//         playerId:id,
-//         playerName:name,
-//         statingPosition: startPos,
-//         jumpPosition:jumpPos,
-//         breakPosition:breakPos,
-//         entrancePosition:entracePos,
-//         endPosition: endPos, //entracePos+6,
-//         currentPos:[startPos,startPos,startPos,startPos]
-//     }
-//     arrayGameInfo.push(player);
-// }
-
-
-// assignPlayers('playerYel','Yellow',38,68,34,84,88);
-// assignPlayers('playerBlu','Blue'  ,21,68,17,77,81);
-// assignPlayers('playerGre','Green' ,55,68,51,92,95);
-// assignPlayers('playerRed','Red'   ,04,-1,68,69,74);
-
+// prototype information about the players and game status
 function gameStatus(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
         this.playerId=id;
         this.playerName=name;
@@ -45,15 +27,17 @@ function gameStatus(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
         this.currentPos=[startPos,startPos,startPos,startPos]
 }
 
+// creating players objects
 var yellowPlayer= new gameStatus('playerYel','Yellow',38,68,34,84,88);
-var bluePlayer= new gameStatus('playerBlu','Blue'  ,21,68,17,77,81);
-var greenPlayer= new gameStatus('playerGre','Green' ,55,68,51,92,95);
-var redPlayer= new gameStatus('playerRed','Red'   ,04,-1,68,69,74);
+var bluePlayer=   new gameStatus('playerBlu','Blue'  ,21,68,17,77,81);
+var greenPlayer=  new gameStatus('playerGre','Green' ,55,68,51,92,95);
+var redPlayer=    new gameStatus('playerRed','Red'   ,04,-1,68,69,74);
 
 arrayGameInfo.push(yellowPlayer,bluePlayer,greenPlayer,redPlayer);
 
+//reset game
 function setGameValues(){
-
+    // choosing first player
     currentPlayer=Math.floor(Math.random()*4);
     dicePoints = 0;
     anotherChance=false;
@@ -64,27 +48,28 @@ function setGameValues(){
     arrayGameInfo[3].currentPos=[04,-1,68,69,74];
 
     let $arrayPlayer=$(".player");
-    let arrayClass=["Yel","Blu","Gre","Red"];
     let k=0;
-    for (let $element of $arrayPlayer){
-        let $arrayPieces=$(`#player${arrayClass[k]} > .player${arrayClass[k]}`);
 
+    // pieces back to the kingdom
+    for (let $element of $arrayPlayer){
+        let $arrayPieces=$(`> .player${arrayClass[k]}`,$homeClastle);
         for (let $elementPieces of $arrayPieces){
-                $($element).append($elementPieces);
+            $($element).append($elementPieces);
         }
         k++;
     }
 }
 
+//  creates element
 function createElement($parent,elementType,elementClass,elementId,content){
     let $createdElement = $(`<${elementType}>`,{id:elementId, class:elementClass,text:content});
     $($parent).append($createdElement);
     return $createdElement;
 }
 
+// creating 4 pieces for each player
 function createPieces(){
     let $arrayPlayer=$(".player");
-    let arrayClass=["Yel","Blu","Gre","Red"];
     let k=0;
     for (let $element of $arrayPlayer){
         for (let i=1; i <= 4 ; i++){
@@ -97,6 +82,7 @@ function createPieces(){
     }
 }
 
+// getting the values for the movement of the piece
 function rollDices(){
     $($protector).css("display" , "block")
 
@@ -123,6 +109,7 @@ function rollDices(){
             $score.text(`Move ${dicePoints} positions`);
         }
         else{
+            // if the player get the same number in the dices then gets another turn
             if (anotherChance){
                 alert("DOUBLES!!! \nThe player gets an extra turn");
             };
@@ -132,6 +119,8 @@ function rollDices(){
     }
 }
 
+
+// formar a string depending of the size passed as a parameter
 function format(value,myChar,size){
     let myValue=value.toString();
     let k=myValue.length;
@@ -142,6 +131,8 @@ function format(value,myChar,size){
     return myValue;
 }
 
+
+//validating the pieces before moving the pieces
 function checkMovement($element){
     let myPlayer= $element.data('player');
     let currentPiece= $element.data('piece');
@@ -159,6 +150,7 @@ function checkMovement($element){
     movePieces(dicePoints,$element);
 }
 
+//moving the piexes
 function movePieces(steps,$movingPiece){
     let currentPiece= $movingPiece.data('piece');
     let timer=350;
@@ -170,7 +162,7 @@ function movePieces(steps,$movingPiece){
     let pos=0;
     let id = setInterval(nextPos, timer);
     //testing
-    //steps=73;
+    steps=73;
     //currentPos=37;
     function nextPos(){
         let audio = new Audio('media/marching.mp3');
@@ -213,9 +205,10 @@ function movePieces(steps,$movingPiece){
             arrayGameInfo[currentPlayer].currentPos[currentPiece]=currentPos;
             clearInterval(id);
 
+
             if (!homePosition) {
-                retreatPieces($movingPiece.data('player'),$newParent,$movingPiece);
-                traps($movingPiece.data('player'),$newParent,$movingPiece);
+                retreatPieces($movingPiece.data('player'),$newParent,$movingPiece);// cheking if there are other pieces in that position
+                traps($movingPiece.data('player'),$newParent,$movingPiece); //checking if the actual position is a trap
             }
             $($protector).css("display" , "none")
         }
@@ -223,8 +216,9 @@ function movePieces(steps,$movingPiece){
 
     //making sure this part doesn't execute until the piece is moved
     setTimeout( function(){
+        //test
         if(!anotherChance){
-           currentPlayer===3 ? currentPlayer=0 : currentPlayer++;
+           //currentPlayer===3 ? currentPlayer=0 : currentPlayer++;
         }
         $turn.text(`Player turn : ${arrayGameInfo[currentPlayer].playerName}`);
         dicePoints=0;
@@ -276,11 +270,33 @@ window.onload = function() {
     $turn = $("#turn");
     $turn.text(`Player's turn : ${arrayGameInfo[currentPlayer].playerName}`);
 
-    //presenting the pos number
-    // $arrayPositions=$(".position");
-    // for (let $position of $arrayPositions){
-    //     $($position).text(($($position).attr("id")).substring(8,11));
-    // }
+    $arrayPositions=$(".position");
+    for (let $position of $arrayPositions){
+        $($position).css("background-image","url('images/road.jpg')")
+        //presenting the pos number
+        //$($position).text(($($position).attr("id")).substring(8,11));
+    }
+
+    $("#position039").css("background-image","url('images/troll.jpg')");
+    $("#position022").css("background-image","url('images/troll.jpg')");
+    $("#position056").css("background-image","url('images/troll.jpg')");
+    $("#position005").css("background-image","url('images/troll.jpg')");
+
+    $("#position039").css("background-color","yellow");
+    $("#position022").css("background-color","blue");
+    $("#position056").css("background-color","green");
+    $("#position005").css("background-color","red");
+
+    $("#position039").data({'trap':"troll"});
+    $("#position022").data({'trap':"troll"});
+    $("#position056").data({'trap':"troll"});
+    $("#position005").data({'trap':"troll"});
+
+    $("#position075").css("background-image","url('images/bridge.jpg')");
+    $("#position082").css("background-image","url('images/bridge.jpg')");
+    $("#position089").css("background-image","url('images/bridge.jpg')");
+    $("#position096").css("background-image","url('images/bridge.jpg')");
+
 }
 
 
@@ -309,13 +325,16 @@ function traps(player,$position,$movingPiece){
     if ($position.data("trap")==="troll" && player != otherPlayer){
         let audio = new Audio('media/troll.mp3');
         audio.play();
+        $position.css("animation","shake 2s");
         setTimeout(function(){$(`#${player}`).append($movingPiece)},2000);
         console.log(player + " has steped with a troll")
     }
 
-    if ($position.data("trap")==="bomb" && player != otherPlayer){
+    if ($position.data("trap")==="bomb" /*&& player != otherPlayer*/){
         let audio = new Audio('media/bomb.mp3');
         audio.play();
+        $position.data("trap","");
+        $position.css("animation","shake 2s");
         $position.css("background-image","url('images/bomb.jpg')");
         setTimeout(function(){$(`#${player}`).append($movingPiece)},2000);
         console.log(player + " has steped into a bomb")
@@ -347,23 +366,25 @@ function createBoard(){
     let $playerImg;
 
     //left bar
-    const $scoreBar=createElement($element,"div","scoreBar","scoreBar","");
+    const $leftBar=createElement($element,"div","Bar","leftBar","");
     $myModal=createElement($element,"div","myModal","myModal","");
     $protector=createElement($element,"div","myModal protector","myModal","");
     $winner=createElement($myModal,"h1","hmain","winner","");
 
-    let $ele=createElement($scoreBar,"div","diceContainer","diceContainer","");
+    let $ele=createElement($leftBar,"div","diceContainer","diceContainer","");
     $dice1=createElement($ele,"div","dice","dice1","");
     $dice1.css("background-image",`url('images/side1.jpg`);
 
     $dice2=createElement($ele,"div","dice","dice2","");
     $dice2.css("background-image",`url('images/side1.jpg`);
-    createElement($scoreBar,"button","myButton","rollDices","ROLL DICES");
-    createElement($scoreBar,"h1","h1","score","00");
-    createElement($scoreBar,"h1","h1","turn","");
+    createElement($leftBar,"button","myButton","rollDices","ROLL DICES");
+    createElement($leftBar,"h1","h1","score","00");
+    createElement($leftBar,"h1","h1","turn","");
 
     //MAIN CONTAINER
     const $containerDiv=createElement($element,"div","containerDiv","containerDiv","");
+    //right bar
+    const $rightBar=createElement($element,"div","Bar","rightBar","asdasdasdasfas");
 
     //SMALL CONTAINER TOP (
     let $middle=createElement($containerDiv,"div","middleContDiv","middleContDiv1","");
@@ -386,6 +407,7 @@ function createBoard(){
     let $posSquare2=createElement($middle,"div","posSquare posSquareCol","posSquare2","");
     $homeClastle=createElement($middle,"div","posSquare posSquareCol","posSquare3","");
     $homeClastle.css("flex-wrap","wrap");
+    $homeClastle.css("flex-direction","row");
     $homeClastle.css("background-image","url('images/kingdomHome.jpg')");
 
 
@@ -407,6 +429,7 @@ function createBoard(){
     createElement($element,"h2","h2","hPlayerRed","");
 
     //POSITIONS CONTAINERs
+
     for (index = 4; index >=2; index--) {
         createElement($posSquare4,"div","posSquare  posSquareR posSquareCol posSquareRow","line"+(index),"");
         createElement($posSquare1,"div","posSquare posSquareCol ","line"+(index+3),"");
@@ -433,6 +456,7 @@ function createBoard(){
     createElement($("#line9"),"div","position position2","position"+51,"" );
 
     //positions for decrecing positions
+
     for (index = 9; index <=16; index++) {
         createElement($("#line2"),"div","position position2","position"+format(index,"0",3),"");
         createElement($("#line7"),"div","position","position"+format(index+26,"0",3),"");
@@ -452,36 +476,12 @@ function createBoard(){
         createElement($("#line6"),"div","position playerYel","position"+format(index,"0",3),"");
         createElement($("#line9"),"div","position position2 playerGre","position"+format(index+7,"0",3),"");
     }
-
-    $("#position039").css("background-image","url('images/troll.jpg')");
-    $("#position022").css("background-image","url('images/troll.jpg')");
-    $("#position056").css("background-image","url('images/troll.jpg')");
-    $("#position005").css("background-image","url('images/troll.jpg')");
-
-    $("#position039").css("background-color","yellow");
-    $("#position022").css("background-color","blue");
-    $("#position056").css("background-color","green");
-    $("#position005").css("background-color","red");
-
-    $("#position039").data({'trap':"troll"});
-    $("#position022").data({'trap':"troll"});
-    $("#position056").data({'trap':"troll"});
-    $("#position005").data({'trap':"troll"});
-
-    $("#position075").css("background-image","url('images/bridge.jpg')");
-    $("#position082").css("background-image","url('images/bridge.jpg')");
-    $("#position089").css("background-image","url('images/bridge.jpg')");
-    $("#position096").css("background-image","url('images/bridge.jpg')");
-
-    for (index =1 ; index < 10 ; index++){
+    //test
+    for (index =1 ; index < 1000 ; index++){
         let trapPosition=Math.floor(Math.random()*96)+1;
         $(`#position0${trapPosition}`).data({'trap':"bomb"});
-        //$(`#position0${trapPosition}`).css("transform","scaleY(-1)");
    }
 
 }
 
-// function assignAttributeBygruop(  , attribute, value){
-//      $(`#position0${trapPosition}`).css(attribute, value)
-// }
 

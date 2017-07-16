@@ -15,9 +15,9 @@
 }
 
 
-@media  (max-width: 900px) {
+@media  (max-width: 800px) {
     body {
-        height: 850px;
+        height: 800px;
     }
 }
 
@@ -57,8 +57,8 @@
     }
 
 .containerDiv{
-    width: 850px;
-    height: 850px;
+    width: 76%;
+    height: 800px;
     background-color: black;
     border:1px solid white;
     display: flex;
@@ -66,8 +66,9 @@
     margin: auto;
  }
 
-.scoreBar{
-    height: 850px;
+.Bar{
+    height: 800px;
+    width: 12%;
     background-color:blue;
     position: relative;
     display: flex;
@@ -78,7 +79,7 @@
     width:100%;
     height: 33.33%;
     background-color: #00a98f;
-    border:1px solid white;
+    /*border:1px solid white;*/
     display: flex;
     flex-direction:row;
     flex-wrap: wrap;
@@ -107,7 +108,6 @@
     position: relative;
     background-repeat: no-repeat;
     background-size:cover;
-    /*border-radius:50%;*/
 }
 
 .posSquare{
@@ -116,7 +116,6 @@
     background-color: white;
     margin: auto;
     display: flex;
-    border: 1px solid black;
     position: relative;
 
 }
@@ -231,3 +230,20 @@
     border:none;
 }
 
+@keyframes shake {
+    10%, 90% {
+        transform: translate3d(-1px, -1px, -1px);
+    }
+
+    20%, 80% {
+        transform: translate3d(2px, 4px, 6px);
+    }
+
+    30%, 50%, 70% {
+        transform: translate3d(-4px, -5px, -8px);
+    }
+
+    40%, 60% {
+        transform: translate3d(4px, 6px, 6px);
+    }
+}
