@@ -15,6 +15,11 @@ var $infoPositions;
 var $winner;
 var arrayClass=["Yel","Blu","Gre","Red"];
 
+var $statusYel;
+var $statusBlu;
+var $statusGre;
+var $statusRed;
+
 // prototype information about the players and game status
 function gameStatus(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
         this.playerId=id;
@@ -46,6 +51,8 @@ function setGameValues(){
     arrayGameInfo[1].currentPos=[21,68,17,77,81];
     arrayGameInfo[2].currentPos=[55,68,51,92,95];
     arrayGameInfo[3].currentPos=[04,-1,68,69,74];
+
+    presentGameStatus();
 
     let $arrayPlayer=$(".player");
     let k=0;
@@ -85,40 +92,38 @@ function createPieces(){
 // getting the values for the movement of the piece
 function rollDices(){
     $($protector).css("display" , "block")
-
     anotherChance=false;
     if (dicePoints>0) {
         alert("You already rolled the dice. Move the piece");
         return;
     }
+
     let audio = new Audio('media/rolling.mp3');
-    audio.play()
-    let id = setInterval(getValue, 120);
+    audio.play();
+    let id = setInterval(getValue, 110);
     let times=0;
 
     function getValue(){
         let valueDice1= Math.floor(Math.random()*6)+1;
         let valueDice2= Math.floor(Math.random()*6)+1;
 
-        if(times<=15/*Math.floor(Math.random()*15)+1*/){
+        if(times<=15/* testing Math.floor(Math.random()*15)+1*/){
             times=times+1;
             $dice1.css("background-image",`url('${diceImages[valueDice1-1]}')`);
             $dice2.css("background-image",`url('${diceImages[valueDice2-1]}')`);
             (valueDice1===valueDice2) ? anotherChance =true : anotherChance =false;
             dicePoints=valueDice1+valueDice2;
             $score.text(`Move ${dicePoints} positions`);
-        }
-        else{
+        }else{
             // if the player get the same number in the dices then gets another turn
             if (anotherChance){
                 alert("DOUBLES!!! \nThe player gets an extra turn");
-            };
+            }
             clearInterval(id);
             $($protector).css("display" , "none");
         }
     }
 }
-
 
 // formar a string depending of the size passed as a parameter
 function format(value,myChar,size){
@@ -131,12 +136,12 @@ function format(value,myChar,size){
     return myValue;
 }
 
-
-//validating the pieces before moving the pieces
+//validation before moving the pieces
 function checkMovement($element){
     let myPlayer= $element.data('player');
     let currentPiece= $element.data('piece');
 
+    // verifying the player only moves their own pieces
     if (myPlayer!=arrayGameInfo[currentPlayer].playerId){
         alert(`The players are only allowed to move thir own pieces.\n This is not your piece`);
         return;
@@ -150,19 +155,26 @@ function checkMovement($element){
     movePieces(dicePoints,$element);
 }
 
-//moving the piexes
+function presentGameStatus(){
+    $statusYel.text(`${arrayGameInfo[0].playerName} \nposition \n ${arrayGameInfo[0].currentPos}`);
+    $statusBlu.text(`${arrayGameInfo[1].playerName} \nposition \n ${arrayGameInfo[1].currentPos}`);
+    $statusGre.text(`${arrayGameInfo[2].playerName} \nposition \n ${arrayGameInfo[2].currentPos}`);
+    $statusRed.text(`${arrayGameInfo[3].playerName} \nposition \n ${arrayGameInfo[3].currentPos}`);
+}
+
+//moving the pieces
 function movePieces(steps,$movingPiece){
     let currentPiece= $movingPiece.data('piece');
-    let timer=350;
+    let timer=380;
     let winningGame=false;
-
+    let remaingSteps=0;
 
     let currentPos=arrayGameInfo[currentPlayer].currentPos[currentPiece];
 
     let pos=0;
     let id = setInterval(nextPos, timer);
     //testing
-    steps=73;
+    //steps=90;
     //currentPos=37;
     function nextPos(){
         let audio = new Audio('media/marching.mp3');
@@ -172,7 +184,7 @@ function movePieces(steps,$movingPiece){
         let homePosition =false;
         currentPos++;
         pos++;
-
+        remaingSteps=steps-pos;
         // check jumpins position
         if (currentPos-1 === arrayGameInfo[currentPlayer].jumpPosition){
             currentPos=1;
@@ -190,6 +202,7 @@ function movePieces(steps,$movingPiece){
         if (currentPos-1 >arrayGameInfo[currentPlayer].endPosition){
             //moving to castle(home)
             homePosition=true;
+            pos=steps;
             $newParent=$homeClastle;
             setTimeout(function(){winningGame=checkWinner($movingPiece.data('player'))},20)
         }
@@ -200,29 +213,30 @@ function movePieces(steps,$movingPiece){
             dicePoints-=pos;
             steps=pos;
         }
-        //
+        //last move
         if(pos===steps){
             arrayGameInfo[currentPlayer].currentPos[currentPiece]=currentPos;
             clearInterval(id);
-
 
             if (!homePosition) {
                 retreatPieces($movingPiece.data('player'),$newParent,$movingPiece);// cheking if there are other pieces in that position
                 traps($movingPiece.data('player'),$newParent,$movingPiece); //checking if the actual position is a trap
             }
-            $($protector).css("display" , "none")
+            $($protector).css("display" , "none");
+            presentGameStatus();
+
         }
     }
 
     //making sure this part doesn't execute until the piece is moved
     setTimeout( function(){
-        //test
-        if(!anotherChance){
-           //currentPlayer===3 ? currentPlayer=0 : currentPlayer++;
+        //testing
+        if(!anotherChance && remaingSteps<=0){
+           currentPlayer===3 ? currentPlayer=0 : currentPlayer++;
         }
         $turn.text(`Player turn : ${arrayGameInfo[currentPlayer].playerName}`);
-        dicePoints=0;
-    },  steps*(timer+20));
+        dicePoints=remaingSteps;
+    },  steps*(timer+5));
 
 }
 
@@ -243,11 +257,8 @@ window.onload = function() {
     for (i=1; i<=4; i++){
         arrayGameInfo[i-1].playerName=((prompt(`Player ${i} name`, `Player ${i}`)) + "'s KINGDOM").toUpperCase();
     }
-    $("#hPlayerYel").text(arrayGameInfo[0].playerName)
-    $("#hPlayerBlu").text(arrayGameInfo[1].playerName)
-    $("#hPlayerGre").text(arrayGameInfo[2].playerName)
-    $("#hPlayerRed").text(arrayGameInfo[3].playerName)
 
+    presentGameStatus();
     // adding the events
     $("#rollDices").on("click", function(){
         rollDices();
@@ -266,6 +277,7 @@ window.onload = function() {
 
     })
 
+    //presenting info
     $score=$("#score");
     $turn = $("#turn");
     $turn.text(`Player's turn : ${arrayGameInfo[currentPlayer].playerName}`);
@@ -277,10 +289,11 @@ window.onload = function() {
         //$($position).text(($($position).attr("id")).substring(8,11));
     }
 
-    $("#position039").css("background-image","url('images/troll.jpg')");
-    $("#position022").css("background-image","url('images/troll.jpg')");
-    $("#position056").css("background-image","url('images/troll.jpg')");
-    $("#position005").css("background-image","url('images/troll.jpg')");
+    //refact
+    $("#position039").css("background-image","url('images/troll1.jpg')");
+    $("#position022").css("background-image","url('images/troll2.jpg')");
+    $("#position056").css("background-image","url('images/troll3.jpg')");
+    $("#position005").css("background-image","url('images/troll4.jpg')");
 
     $("#position039").css("background-color","yellow");
     $("#position022").css("background-color","blue");
@@ -297,8 +310,11 @@ window.onload = function() {
     $("#position089").css("background-image","url('images/bridge.jpg')");
     $("#position096").css("background-image","url('images/bridge.jpg')");
 
+    $("#hPlayerYel").text(arrayGameInfo[0].playerName);
+    $("#hPlayerBlu").text(arrayGameInfo[1].playerName);
+    $("#hPlayerGre").text(arrayGameInfo[2].playerName);
+    $("#hPlayerRed").text(arrayGameInfo[3].playerName);
 }
-
 
 function checkWinner(player){
     let $piecesInCastle=$(`#posSquare3 > .${player}`);
@@ -314,11 +330,11 @@ function celebration(){
     $($winner).text(`${arrayGameInfo[currentPlayer].playerName} IS THE WINNER`);
 
     let audio = new Audio('media/winningsound.mp3');
-    audio.play()
-
+    audio.play();
 }
 
 function traps(player,$position,$movingPiece){
+    //refact
     let movedPlayer=false;
     let otherPlayer=$position.data("player");
 
@@ -360,6 +376,9 @@ function retreatPieces(player,$position,$movingPiece){
     }
 }
 
+//refact
+
+//creating elements for the board
 function createBoard(){
     let index=0;
     let $element=$("#mainDiv");
@@ -384,7 +403,12 @@ function createBoard(){
     //MAIN CONTAINER
     const $containerDiv=createElement($element,"div","containerDiv","containerDiv","");
     //right bar
-    const $rightBar=createElement($element,"div","Bar","rightBar","asdasdasdasfas");
+    const $rightBar=createElement($element,"div","Bar","rightBar","");
+    $statusYel =  createElement($rightBar,"h2","h2 playerYel","statusYel","");
+    $statusBlu =  createElement($rightBar,"h2","h2 playerBlu","statusBlu","");
+    $statusGre =  createElement($rightBar,"h2","h2 playerGre","statusGre","");
+    $statusRed =  createElement($rightBar,"h2","h2 playerRed","statusRed","");
+
 
     //SMALL CONTAINER TOP (
     let $middle=createElement($containerDiv,"div","middleContDiv","middleContDiv1","");
@@ -476,8 +500,8 @@ function createBoard(){
         createElement($("#line6"),"div","position playerYel","position"+format(index,"0",3),"");
         createElement($("#line9"),"div","position position2 playerGre","position"+format(index+7,"0",3),"");
     }
-    //test
-    for (index =1 ; index < 1000 ; index++){
+    //testing
+    for (index =1 ; index < 10; index++){
         let trapPosition=Math.floor(Math.random()*96)+1;
         $(`#position0${trapPosition}`).data({'trap':"bomb"});
    }

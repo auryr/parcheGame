@@ -4,7 +4,7 @@
     box-sizing: border-box;
     font-family: 'Times new Roman';
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 100% 100%;
     background-color: transparent;
 }
 
@@ -32,7 +32,7 @@
 
 
 .h2{
-    color:#050f2c;
+    color:yellow;
     font-size: 18px;
     text-align: center;
     width: 100%;
@@ -40,11 +40,12 @@
   }
 
 .hmain{
-    color:#b4a996;
+    color:yellow;
     font-size: 70px;
     text-align: center;
     width: 100%;
     margin: auto;
+    font-family: 'MedievalSharp','Times new Roman','Helvetica', 'sans-serif';
   }
 
 
@@ -140,9 +141,10 @@
     width: 100%;
     background-color: #d9e0e2;
     margin: auto;
+    display: flex;
     border: 1px solid white;
     position: relative;
-    background-size: cover;
+    background-size:100% 100%;
 }
 
 .position2{
@@ -156,21 +158,25 @@
 .playerYel{
     /*background-color: yellow;*/
     border:1px solid yellow;
+    color:yellow;
 }
 
 .playerBlu{
     /*background-color: blue;*/
     border:1px solid blue;
+    color: blue
 }
 
 .playerGre{
     /*background-color: green;*/
     border:1px solid green;
+    color : green;
 }
 
 .playerRed{
     /*background-color: red;*/
     border:1px solid red;
+    color : red;
 }
 
 .pieces{
@@ -231,19 +237,25 @@
 }
 
 @keyframes shake {
-    10%, 90% {
+    0%, 50% {
         transform: translate3d(-1px, -1px, -1px);
     }
 
-    20%, 80% {
-        transform: translate3d(2px, 4px, 6px);
+    10%, 60% {
+        transform: translate3d(1px, 1px, 1px);
     }
 
-    30%, 50%, 70% {
-        transform: translate3d(-4px, -5px, -8px);
+    20%, 70% {
+        transform: translate3d(-4px, -4px, -4px);
     }
 
-    40%, 60% {
-        transform: translate3d(4px, 6px, 6px);
+    30%, 80% {
+        transform: translate3d(4px, 4px, 4px);
+    }
+    40%, 90% {
+        transform: translate3d(-2px, -2px, -2px);
+    }
+    50%, 100% {
+        transform: translate3d(2px, 2px, 2px);
     }
 }
