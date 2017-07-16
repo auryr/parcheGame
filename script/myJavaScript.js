@@ -13,7 +13,7 @@ var $protector;
 var $homeClastle;
 var $winner;
 var arrayClass=["Yel","Blu","Gre","Red"];
-var arrayCharacter=["King","Archer","Viking","Horsemen"];
+var arrayCharacter=["King","Archer","Viking","Horseman"];
 //refact var playerCount=2;
 
 var $statusYel;
@@ -30,7 +30,7 @@ function gameStatus(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
         this.breakPosition=breakPos;
         this.entrancePosition=entracePos;
         this.endPosition= endPos;
-        //testing this.currentPos=[38,38,38,38]
+        //testingthis.currentPos=[38,38,38,38]
         this.currentPos=[startPos,startPos,startPos,startPos]
 }
 
@@ -108,6 +108,7 @@ function rollDices(){
     anotherChance=false;
     if (dicePoints>0) {
         alert("You already rolled the dice. Move the  warrior");
+        $($protector).css("display" , "none")
         return;
     }
 
@@ -194,7 +195,8 @@ function movePieces(steps,$movingPiece){
 
     let pos=0;
     let id = setInterval(nextPos, timer);
-    //testing steps=18; currentPos=37;
+    //testing  currentPos=38;steps=73;
+
     function nextPos(){
         let audio = new Audio('media/marching.mp3');
         audio.play()
@@ -251,7 +253,7 @@ function movePieces(steps,$movingPiece){
     setTimeout( function(){
         //testing
         if(!anotherChance && remaingSteps<=0){
-           currentPlayer===3 ? currentPlayer=0 : currentPlayer++;
+          currentPlayer===3 ? currentPlayer=0 : currentPlayer++;
         }
         $turn.text(`Player turn : ${arrayGameInfo[currentPlayer].playerName}`);
         dicePoints=remaingSteps;
@@ -317,11 +319,6 @@ window.onload = function() {
     $("#position056").css("background-image","url('images/troll3.jpg')");
     $("#position005").css("background-image","url('images/troll4.jpg')");
 
-    $("#position039").css("background-color","yellow");
-    $("#position022").css("background-color","blue");
-    $("#position056").css("background-color","green");
-    $("#position005").css("background-color","red");
-
     $("#position039").data({'trap':"troll"});
     $("#position022").data({'trap':"troll"});
     $("#position056").data({'trap':"troll"});
@@ -350,7 +347,7 @@ function celebration(){
     $($myModal).css("background-image" , `url('images/celebrate.gif`);
     $($myModal).css("display" , "block");
     $($winner).text(`${arrayGameInfo[currentPlayer].playerName} IS THE WINNER`);
-
+    setGameValues();
     let audio = new Audio('media/winningsound.mp3');
     audio.play();
 }
@@ -470,16 +467,16 @@ function createBoard(){
     $middle=createElement($containerDiv,"div","middleContDiv","middleContDiv3","");
     $element=createElement($middle,"div","playerSquare  playerGre","playerSquareGre","");
     $element.css("background-image","url('images/forest.jpg')");
+    createElement($element,"h2","h2","hPlayerGre","");
     $playerImg=createElement($element,"div","player","playerGre","");
     $playerImg.css("background-image","url('images/kingdomGre.jpg')");
-    createElement($element,"h2","h2","hPlayerGre","");
 
     let $posSquare5=createElement($middle,"div","posSquare","posSquare5","");
     $element=createElement($middle,"div","playerSquare playerRed","playerSquareRed","");
     $element.css("background-image","url('images/forest.jpg')");
+    createElement($element,"h2","h2","hPlayerRed","");
     $playerImg=createElement($element,"div","player","playerRed","");
     $playerImg.css("background-image","url('images/kingdomRed.jpg')");
-    createElement($element,"h2","h2","hPlayerRed","");
 
     //POSITIONS CONTAINERS
     for (index = 4; index >=2; index--) {
@@ -529,11 +526,10 @@ function createBoard(){
         createElement($("#line9"),"div","position position2 playerGre","position"+format(index+7,"0",3),"");
     }
     //testing
-    for (index =1 ; index < 2000; index++){
+    for (index =1 ; index < 20; index++){
         let trapPosition=Math.floor(Math.random()*96)+1;
         $(`#position0${trapPosition}`).data({'trap':"bomb"});
    }
-
 }
 
 
