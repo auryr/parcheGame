@@ -30,18 +30,10 @@ function gameStatus(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
         this.breakPosition=breakPos;
         this.entrancePosition=entracePos;
         this.endPosition= endPos;
-        //testingthis.currentPos=[38,38,38,38]
         this.currentPos=[startPos,startPos,startPos,startPos]
 }
 
-// creating players objects
-var yellowPlayer= new gameStatus('playerYel','Yellow',38,68,34,84,88);
-var bluePlayer=   new gameStatus('playerBlu','Blue'  ,21,68,17,77,81);
-var greenPlayer=  new gameStatus('playerGre','Green' ,55,68,51,92,95);
-var redPlayer=    new gameStatus('playerRed','Red'   ,04,-1,68,69,74);
-
-arrayGameInfo.push(yellowPlayer,bluePlayer,greenPlayer,redPlayer);
-
+createPlayerOnj();
 function getIndexById(prayerId){
     let index=0;
     for (let i=0 ;i < arrayGameInfo.length; i++){
@@ -53,19 +45,29 @@ function getIndexById(prayerId){
     return index
 }
 
+function createPlayerOnj(){
+    arrayGameInfo=[];
+    var yellowPlayer= new gameStatus('playerYel','Yellow',38,68,34,84,88);
+    var bluePlayer=   new gameStatus('playerBlu','Blue'  ,21,68,17,77,81);
+    var greenPlayer=  new gameStatus('playerGre','Green' ,55,68,51,92,95);
+    var redPlayer=    new gameStatus('playerRed','Red'   ,04,-1,68,69,74);
+    arrayGameInfo.push(yellowPlayer,bluePlayer,greenPlayer,redPlayer);
+}
+
 //reset game
 function setGameValues(){
     // choosing first player
     currentPlayer=Math.floor(Math.random()*4);
     dicePoints = 0;
     anotherChance=false;
-
-    arrayGameInfo[0].currentPos=[38,68,34,84,88];
-    arrayGameInfo[1].currentPos=[21,68,17,77,81];
-    arrayGameInfo[2].currentPos=[55,68,51,92,95];
-    arrayGameInfo[3].currentPos=[04,-1,68,69,74];
+    let pos=0;
+    pos=arrayGameInfo[0].statingPosition;arrayGameInfo[0].currentPos=[pos,pos,pos,pos];
+    pos=arrayGameInfo[1].statingPosition;arrayGameInfo[1].currentPos=[pos,pos,pos,pos];
+    pos=arrayGameInfo[2].statingPosition;arrayGameInfo[2].currentPos=[pos,pos,pos,pos];
+    pos=arrayGameInfo[3].statingPosition;arrayGameInfo[3].currentPos=[pos,pos,pos,pos];
 
     presentGameStatus();
+    $turn.text(`Player's turn : ${arrayGameInfo[currentPlayer].playerName}`);
 
     let $arrayPlayer=$(".player");
     let k=0;
@@ -172,7 +174,7 @@ function checkMovement($element){
 function playerStatus(status,$playerSta){
     let labelText="";
     for(let i=0;i<status.currentPos.length;i++){
-        labelText+=`\n${arrayCharacter[i]} ${status.currentPos[i]-status.statingPosition}`;
+        labelText+=`\n ${arrayCharacter[i]} ${status.currentPos[i]-status.statingPosition}`;
     }
     $playerSta.text(`${status.playerName} position ${labelText}`);
 }
@@ -195,7 +197,8 @@ function movePieces(steps,$movingPiece){
 
     let pos=0;
     let id = setInterval(nextPos, timer);
-    //testing  currentPos=38;steps=73;
+    //testing  currentPos=38;
+    steps=73;
 
     function nextPos(){
         let audio = new Audio('media/marching.mp3');
@@ -257,6 +260,10 @@ function movePieces(steps,$movingPiece){
         }
         $turn.text(`Player turn : ${arrayGameInfo[currentPlayer].playerName}`);
         dicePoints=remaingSteps;
+        if (winningGame){
+            setGameValues();
+
+        }
     },  steps*(timer+5));
 
 }
@@ -314,10 +321,10 @@ window.onload = function() {
     }
 
     //refact
-    $("#position039").css("background-image","url('images/troll1.jpg')");
-    $("#position022").css("background-image","url('images/troll2.jpg')");
-    $("#position056").css("background-image","url('images/troll3.jpg')");
-    $("#position005").css("background-image","url('images/troll4.jpg')");
+    $("#position039").css("background-image","url('images/trollYel.jpg')");
+    $("#position022").css("background-image","url('images/trollBlu.jpg')");
+    $("#position056").css("background-image","url('images/trollGre.jpg')");
+    $("#position005").css("background-image","url('images/trollRed.jpg')");
 
     $("#position039").data({'trap':"troll"});
     $("#position022").data({'trap':"troll"});
@@ -347,7 +354,6 @@ function celebration(){
     $($myModal).css("background-image" , `url('images/celebrate.gif`);
     $($myModal).css("display" , "block");
     $($winner).text(`${arrayGameInfo[currentPlayer].playerName} IS THE WINNER`);
-    setGameValues();
     let audio = new Audio('media/winningsound.mp3');
     audio.play();
 }
