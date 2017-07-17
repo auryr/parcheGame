@@ -6,7 +6,7 @@
 
 
 ## What is Aur-Cheesi?
-###This my own version of the game parcheesi, which is a game that consist in a board ,two dice, four pieces per player that they have to move around the board. In this game the players are kingdoms trying to conquer another kingdom sending their warriors.
+### This my own version of the game parcheesi, which is a game that consist in a board ,two dice, four pieces per player that they have to move around the board. In this game the players are kingdoms trying to conquer another kingdom sending their warriors.
 
 ### I choose it , cause it's a game that I really enjoyed playing when I was a child, it brings back good memories
 
@@ -26,7 +26,7 @@
 
 ## Technical Discussion
 
-###For my game I used
+### For my game I used
 
 *HTML      (Basic board)
 *CSS       (Styling and animation) 
@@ -61,15 +61,15 @@ function checkMovement($element){
 Another thing is setting priorities, most the of the time I was spending to much time in things that werent as important as others.
 
 ## The Making of Aur-cheesi
-###Making this game was amazing , the ideas came one after another, and at some point I had so many thing in my head that I was overwhelmed. But I will have the time to put those ideas in the game later.
+### Making this game was amazing , the ideas came one after another, and at some point I had so many thing in my head that I was overwhelmed. But I will have the time to put those ideas in the game later.
 
 
 ## Opportunities for Future Growth <h2>
-###From now and on I would set priorities
+### From now and on I would set priorities
 
 
 ## If you had more time to work on your game, what would you do?
-###While I Was working on my project I had so many ideas, that couldn't focus on one thing at a time. So I decided to make a list of the things that I would do in the refactoring phase to make my game better.
+### While I Was working on my project I had so many ideas, that couldn't focus on one thing at a time. So I decided to make a list of the things that I would do in the refactoring phase to make my game better.
 ### Here they are:
 * Make the game 3d
 * Use better images and sounds.
