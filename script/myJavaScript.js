@@ -98,7 +98,6 @@ function createPieces(){
             let $piece =createElement($($element),"div",`pieces player${arrayClass[k]}`, `piece${arrayClass[k]}`+i);
             $piece.css("background-image",`url('images/piece${arrayClass[k]}${i}.jpg')`);
             $piece.data({'player': $element.id ,"piece":i-1});
-
         }
         k++;
     }
@@ -131,8 +130,7 @@ function rollDices(){
             dicePoints=valueDice1+valueDice2;
             $score.text(`Move ${dicePoints} positions`);
         }else{
-            // if the player get the same number in the dices then gets another turn
-            if (anotherChance){
+            if (anotherChance){// if the player get the same number in the dices then gets another turn
                 alert("DOUBLES!!! \nThe kingdom gets an extra turn");
             }
             clearInterval(id);
@@ -141,7 +139,6 @@ function rollDices(){
     }
 }
 
-// formar a string depending of the size passed as a parameter
 function format(value,myChar,size){
     let myValue=value.toString();
     let k=myValue.length;
@@ -149,16 +146,16 @@ function format(value,myChar,size){
         myValue=myChar+ myValue;
         k=myValue.length ;
     }
-    return myValue;
+    return myValue;// formar a string depending of the size passed as a parameter
 }
 
-//validation before moving the pieces
-function checkMovement($element){
+
+function checkMovement($element){//validation before moving the pieces
     let myPlayer= $element.data('player');
     let currentPiece= $element.data('piece');
 
-    // verifying the player only moves their own pieces
-    if (myPlayer!=arrayGameInfo[currentPlayer].playerId){
+
+    if (myPlayer!=arrayGameInfo[currentPlayer].playerId){// verifying the player only moves their own pieces
         alert(`The kingdoms are only allowed to move their own warriors. \nThis is not your  warrior`);
         return;
     }
@@ -174,9 +171,10 @@ function checkMovement($element){
 function playerStatus(status,$playerSta){
     let labelText="";
     for(let i=0;i<status.currentPos.length;i++){
-        labelText+=`\n ${arrayCharacter[i]} ${status.currentPos[i]-status.statingPosition}`;
+        labelText+=`[${arrayCharacter[i]} ${status.currentPos[i]-status.statingPosition}] `;
     }
     $playerSta.text(`${status.playerName} position ${labelText}`);
+    $playerSta.css("border","2px double")
 }
 
 function presentGameStatus(){
@@ -186,8 +184,7 @@ function presentGameStatus(){
     playerStatus(arrayGameInfo[3],$statusRed);
 }
 
-//moving the pieces
-function movePieces(steps,$movingPiece){
+function movePieces(steps,$movingPiece){//moving the pieces
     let currentPiece= $movingPiece.data('piece');
     let timer=380;
     let winningGame=false;
@@ -197,9 +194,7 @@ function movePieces(steps,$movingPiece){
 
     let pos=0;
     let id = setInterval(nextPos, timer);
-    //testing  currentPos=38;
-    steps=73;
-
+    //testing  currentPos=38;steps=73;
     function nextPos(){
         let audio = new Audio('media/marching.mp3');
         audio.play()
@@ -213,7 +208,6 @@ function movePieces(steps,$movingPiece){
         if (currentPos-1 === arrayGameInfo[currentPlayer].jumpPosition){
             currentPos=1;
         }
-
         // check entrance position
         if (currentPos-1 ===arrayGameInfo[currentPlayer].breakPosition){
             currentPos=arrayGameInfo[currentPlayer].entrancePosition;
@@ -221,7 +215,6 @@ function movePieces(steps,$movingPiece){
 
         let $newParent=$("#position" +format(currentPos,"0",3));
         let $child=$movingPiece;
-
         // check end position.
         if (currentPos-1 >arrayGameInfo[currentPlayer].endPosition){
             //moving to castle(home)
@@ -265,7 +258,6 @@ function movePieces(steps,$movingPiece){
 
         }
     },  steps*(timer+5));
-
 }
 
 window.onload = function() {
@@ -326,15 +318,10 @@ window.onload = function() {
     $("#position056").css("background-image","url('images/trollGre.jpg')");
     $("#position005").css("background-image","url('images/trollRed.jpg')");
 
-    $("#position039").data({'trap':"troll"});
-    $("#position022").data({'trap':"troll"});
-    $("#position056").data({'trap':"troll"});
-    $("#position005").data({'trap':"troll"});
+    $("#position039, #position022, #position056, #position005").data({'trap':"troll"});
 
-    $("#position075").css("background-image","url('images/bridge2.jpg')");
-    $("#position082").css("background-image","url('images/bridge.jpg')");
-    $("#position089").css("background-image","url('images/bridge2.jpg')");
-    $("#position096").css("background-image","url('images/bridge.jpg')");
+    $("#position075, #position089").css("background-image","url('images/bridge2.jpg')");
+    $("#position082, #position096").css("background-image","url('images/bridge.jpg')");
 
     $("#hPlayerYel").text(arrayGameInfo[0].playerName);
     $("#hPlayerBlu").text(arrayGameInfo[1].playerName);
@@ -484,14 +471,12 @@ function createBoard(){
     $playerImg=createElement($element,"div","player","playerRed","");
     $playerImg.css("background-image","url('images/kingdomRed.jpg')");
 
-    //POSITIONS CONTAINERS
-    for (index = 4; index >=2; index--) {
+    for (index = 4; index >=2; index--) {//POSITIONS CONTAINERS
         createElement($posSquare4,"div","posSquare  posSquareR posSquareCol posSquareRow","line"+(index),"");
         createElement($posSquare1,"div","posSquare posSquareCol ","line"+(index+3),"");
     }
 
-    //POSITIONS CONTAINERs
-    for (index = 8; index <=10; index++) {
+    for (index = 8; index <=10; index++) {//POSITIONS CONTAINERs
         createElement($posSquare2,"div","posSquare  posSquareR posSquareCol posSquareRow","line"+(index),"");
         if (index<10){
             createElement($posSquare5,"div","posSquare posSquareCol ","line"+(index+3),"");
@@ -499,8 +484,7 @@ function createBoard(){
     }
     createElement($posSquare5,"div","posSquare posSquareCol ","line"+1,"");
 
-    //positions for ascending positions
-    for (index = 8; index >=1; index--) {
+    for (index = 8; index >=1; index--) {    //positions for ascending positions
         createElement($("#line1"),"div","position","position"+format(index,"0",3),"");
         createElement($("#line4"),"div","position position2" ,"position"+format(index+17,"0",3),"");
         createElement($("#line5"),"div","position","position"+format(index+25,"0",3),"");
@@ -510,9 +494,7 @@ function createBoard(){
     createElement($("#line6"),"div","position","position"+format(34,"0",3),"");
     createElement($("#line9"),"div","position position2","position"+51,"" );
 
-    //positions for decrecing positions
-
-    for (index = 9; index <=16; index++) {
+    for (index = 9; index <=16; index++) {    //positions for decrecing positions
         createElement($("#line2"),"div","position position2","position"+format(index,"0",3),"");
         createElement($("#line7"),"div","position","position"+format(index+26,"0",3),"");
         createElement($("#line10"),"div","position position2","position"+format(index+43,"0",3),"");
@@ -537,5 +519,3 @@ function createBoard(){
         $(`#position0${trapPosition}`).data({'trap':"bomb"});
    }
 }
-
-

@@ -16,8 +16,8 @@
 
 ## Wireframe
 
-![Wire frame](./scr/wf.jpg)
 
+![Wire frame](./scr/wf.jpg)
 ![Wire frame](./scr/wf2.jpg)
 
 ## Challenges

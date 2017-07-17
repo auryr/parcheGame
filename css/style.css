@@ -15,9 +15,9 @@
 }
 
 
-@media  (max-width: 700px) {
+@media  (max-width: 800px) {
     body {
-        height: 700px;
+        height: 800px;
     }
 }
 
@@ -59,7 +59,7 @@
 
 .containerDiv{
     width: 76%;
-    height: 700px;
+    height: 800px;
     border:1px solid white;
     display: flex;
     flex-direction: column;
@@ -67,7 +67,7 @@
  }
 
 .Bar{
-    height: 700px;
+    height: 800px;
     width: 12%;
     position: relative;
     display: flex;
