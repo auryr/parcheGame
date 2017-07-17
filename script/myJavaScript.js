@@ -15,7 +15,7 @@ var $winner;
 var arrayClass=["Yel","Blu","Gre","Red"];
 var arrayCharacter=["King","Archer","Viking","Horseman"];
 //refact var playerCount=2;
-
+var $statusL=[];
 var $statusYel;
 var $statusBlu;
 var $statusGre;
@@ -130,6 +130,8 @@ function rollDices(){
             $score.text(`Move ${dicePoints} positions`);
         }else{
             if (anotherChance){// if the player get the same number in the dices then gets another turn
+                let dblAudio = new Audio('media/double.mp3');
+                dblAudio.play()
                 alert("DOUBLES!!! \nThe kingdom gets an extra turn");
             }
             clearInterval(id);
@@ -248,14 +250,11 @@ function movePieces(steps,$movingPiece){//moving the pieces
     setTimeout( function(){
         //testing
         if(!anotherChance && remaingSteps<=0){
-          currentPlayer===3 ? currentPlayer=0 : currentPlayer++;
+            currentPlayer===3 ? currentPlayer=0 : currentPlayer++;
         }
         $turn.text(`Player turn : ${arrayGameInfo[currentPlayer].playerName}`);
         dicePoints=remaingSteps;
-        if (winningGame){
-            setGameValues();
-
-        }
+        (winningGame)? setGameValues() : 0;
     },  steps*(timer+5));
 }
 
@@ -306,9 +305,7 @@ window.onload = function() {
 
     $arrayPositions=$(".position");
     for (let $position of $arrayPositions){
-        //$($position).css("background-image","url('images/road2.jpg')")
-        //testing presenting the pos number
-        //$($position).text(($($position).attr("id")).substring(8,11));
+        //testing $($position).text(($($position).attr("id")).substring(8,11));
     }
 
     //refact
@@ -449,9 +446,7 @@ function createBoard(){
     $middle=createElement($containerDiv,"div","middleContDiv","middleContDiv2","");
     let $posSquare2=createElement($middle,"div","posSquare posSquareCol","posSquare2","");
     $homeClastle=createElement($middle,"div","posSquare posSquareCol","posSquare3","");
-    $homeClastle.css("flex-wrap","wrap");
-    $homeClastle.css("flex-direction","row");
-    $homeClastle.css("background-image","url('images/kingdomHome.jpg')");
+    $homeClastle.css({"flex-wrap":"wrap","flex-direction":"row","background-image":"url('images/kingdomHome.jpg')"});
 
     let $posSquare4=createElement($middle,"div","posSquare posSquareCol","posSquare4","");
 
