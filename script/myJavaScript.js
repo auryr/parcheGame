@@ -23,14 +23,14 @@ var $statusRed;
 
 // prototype information about the players and game status
 function gameStatus(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
-        this.playerId=id;
-        this.playerName=name;
-        this.statingPosition= startPos;
-        this.jumpPosition=jumpPos;
-        this.breakPosition=breakPos;
-        this.entrancePosition=entracePos;
-        this.endPosition= endPos;
-        this.currentPos=[startPos,startPos,startPos,startPos]
+    this.playerId=id;
+    this.playerName=name;
+    this.statingPosition= startPos;
+    this.jumpPosition=jumpPos;
+    this.breakPosition=breakPos;
+    this.entrancePosition=entracePos;
+    this.endPosition= endPos;
+    this.currentPos=[startPos,startPos,startPos,startPos]
 }
 
 createPlayerOnj();
@@ -46,7 +46,6 @@ function getIndexById(prayerId){
 }
 
 function createPlayerOnj(){
-    arrayGameInfo=[];
     var yellowPlayer= new gameStatus('playerYel','Yellow',38,68,34,84,88);
     var bluePlayer=   new gameStatus('playerBlu','Blue'  ,21,68,17,77,81);
     var greenPlayer=  new gameStatus('playerGre','Green' ,55,68,51,92,95);
