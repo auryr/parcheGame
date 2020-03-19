@@ -1,0 +1,23 @@
+{
+  "name": "parchegame",
+  "version": "1.0.0",
+  "description": "![Screen Shot1](./scr/game.jpg)\r ![Screen Shot2](./scr/win.jpg)\r ![Screen Shot3](./scr/bomb.jpg)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alvarian/parcheGame.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Alvarian/parcheGame/issues"
+  },
+  "homepage": "https://github.com/Alvarian/parcheGame#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  }
+}
