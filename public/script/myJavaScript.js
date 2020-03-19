@@ -1,6 +1,7 @@
+var currentPlayer;
+
 var diceImages=[];
 var $arrayPositions;
-var currentPlayer=Math.floor(Math.random()*4);
 var $score;
 var $turn;
 var dicePoints = 0;
@@ -22,7 +23,7 @@ var $statusGre;
 var $statusRed;
 
 // prototype information about the players and game status
-function gameStatus(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
+function gameStatus(id,name,startPos,jumpPos,breakPos,entracePos,endPos,is_used,is_host){
     this.playerId=id;
     this.playerName=name;
     this.statingPosition= startPos;
@@ -30,7 +31,9 @@ function gameStatus(id,name,startPos,jumpPos,breakPos,entracePos,endPos){
     this.breakPosition=breakPos;
     this.entrancePosition=entracePos;
     this.endPosition= endPos;
-    this.currentPos=[startPos,startPos,startPos,startPos]
+    this.currentPos=[startPos,startPos,startPos,startPos];
+    this.inUse=is_used;
+    this.isHost=is_host;
 }
 
 createPlayerOnj();
@@ -46,10 +49,10 @@ function getIndexById(prayerId){
 }
 
 function createPlayerOnj(){
-    var yellowPlayer= new gameStatus('playerYel','Yellow',38,68,34,84,88);
-    var bluePlayer=   new gameStatus('playerBlu','Blue'  ,21,68,17,77,81);
-    var greenPlayer=  new gameStatus('playerGre','Green' ,55,68,51,92,95);
-    var redPlayer=    new gameStatus('playerRed','Red'   ,04,-1,68,69,74);
+    var yellowPlayer= new gameStatus('playerYel','Yellow',38,68,34,84,88,false,false);
+    var bluePlayer=   new gameStatus('playerBlu','Blue'  ,21,68,17,77,81,false,false);
+    var greenPlayer=  new gameStatus('playerGre','Green' ,55,68,51,92,95,false,false);
+    var redPlayer=    new gameStatus('playerRed','Red'   ,04,-1,68,69,74,false,false);
     arrayGameInfo.push(yellowPlayer,bluePlayer,greenPlayer,redPlayer);
 }
 
@@ -103,7 +106,7 @@ function createPieces(){
 }
 
 // getting the values for the movement of the piece
-function rollDices(){
+function rollDices(valueDice1, valueDice2){
     $($protector).css("display" , "block")
     anotherChance=false;
     if (dicePoints>0) {
@@ -118,8 +121,8 @@ function rollDices(){
     let times=0;
 
     function getValue(){
-        let valueDice1= Math.floor(Math.random()*6)+1;
-        let valueDice2= Math.floor(Math.random()*6)+1;
+        // let valueDice1= Math.floor(Math.random()*6)+1;
+        // let valueDice2= Math.floor(Math.random()*6)+1;
 
         if(times<=15/* testing Math.floor(Math.random()*15)+1*/){
             times=times+1;
@@ -165,8 +168,14 @@ function checkMovement($element){//validation before moving the pieces
         alert("You must roll the dices first");
         return;
     }
-
-    movePieces(dicePoints,$element);
+    const piece_pkg = {
+        el_id: $element.context.id,
+        player: myPlayer,
+        piece: currentPiece
+    }
+    // movePieces(dicePoints,$element);
+    // console.log(piece_pkg)
+    socket.emit('move piece', dicePoints, piece_pkg);
 }
 
 function playerStatus(status,$playerSta){
@@ -185,17 +194,20 @@ function presentGameStatus(){
     playerStatus(arrayGameInfo[3],$statusRed);
 }
 
-function movePieces(steps,$movingPiece){//moving the pieces
-    let currentPiece= $movingPiece.data('piece');
+function movePieces(steps, piece_pkg){//moving the pieces
+    // let currentPiece= $movingPiece.data('piece');
+    const {el_id, player, piece} = piece_pkg;
     let timer=380;
     let winningGame=false;
     let remaingSteps=0;
 
-    let currentPos=arrayGameInfo[currentPlayer].currentPos[currentPiece];
+    let currentPos=arrayGameInfo[currentPlayer].currentPos[piece];
+
+    $('')
 
     let pos=0;
     let id = setInterval(nextPos, timer);
-    //testing  currentPos=38;steps=73;
+    // testing  currentPos=38;steps=73;
     function nextPos(){
         let audio = new Audio('media/marching.mp3');
         audio.play()
@@ -215,14 +227,15 @@ function movePieces(steps,$movingPiece){//moving the pieces
         }
 
         let $newParent=$("#position" +format(currentPos,"0",3));
-        let $child=$movingPiece;
+        // let $child=$movingPiece;
+        let $child = $(`#${el_id}`)
         // check end position.
         if (currentPos-1 >arrayGameInfo[currentPlayer].endPosition){
             //moving to castle(home)
             homePosition=true;
             pos=steps;
             $newParent=$homeClastle;
-            setTimeout(function(){winningGame=checkWinner($movingPiece.data('player'))},20)
+            setTimeout(function(){winningGame=checkWinner(player)},20)
         }
 
         $newParent.append($child);
@@ -233,12 +246,12 @@ function movePieces(steps,$movingPiece){//moving the pieces
         }
         //last move
         if(pos===steps){
-            arrayGameInfo[currentPlayer].currentPos[currentPiece]=currentPos;
+            arrayGameInfo[currentPlayer].currentPos[piece]=currentPos;
             clearInterval(id);
 
             if (!homePosition) {
-                retreatPieces($movingPiece.data('player'),$newParent,$movingPiece);// cheking if there are other pieces in that position
-                traps($movingPiece.data('player'),$newParent,$movingPiece); //checking if the actual position is a trap
+                retreatPieces(player,$newParent,$child);// cheking if there are other pieces in that position
+                traps(player,$newParent,$child); //checking if the actual position is a trap
             }
             $($protector).css("display" , "none");
             presentGameStatus();
@@ -257,73 +270,188 @@ function movePieces(steps,$movingPiece){//moving the pieces
         (winningGame)? setGameValues() : 0;
     },  steps*(timer+5));
 }
+socket.on('move piece', (dicePoints, pkg) => {
+    movePieces(dicePoints, pkg);
+});
 
-window.onload = function() {
-    createBoard();
-    createPieces();
+socket.emit('random player', Math.floor(Math.random()*4));
+const onload = (randomPlayer, {username, isHost}, connections) => { 
+    function load_game(){
+        currentPlayer = starting_player;
 
-    let audio = new Audio('media/entranceSound.mp3');
-    audio.play()
+        createBoard();
+        createPieces();
 
-    let i=0;
-    //array with the images
-    while (i<6){
-        diceImages[i]="images/side"+(i+1) +".jpg";
-        i++;
+        let audio = new Audio('media/entranceSound.mp3');
+        audio.play()
+
+        let i=0;
+        //array with the images
+        while (i<6){
+            diceImages[i]="images/side"+(i+1) +".jpg";
+            i++;
+        }
+
+        presentGameStatus();
+        // adding the events
+        $("#rollDices").on("click", function(){
+            // rollDices();
+            let valueDice1= Math.floor(Math.random()*6)+1;
+            let valueDice2= Math.floor(Math.random()*6)+1;
+
+            socket.emit('roll dice', valueDice1, valueDice2);
+        });
+        socket.on('roll dice', (one, two) => {
+            rollDices(one, two);
+        });
+
+        let $arrayPieces=$(".pieces");
+        for (let $pieceIndex of $arrayPieces){
+            $($pieceIndex).on("click", function(){
+                checkMovement($($pieceIndex))  ;
+            });
+        }
+
+        $($myModal).on("click", function(){
+            $($myModal).css("display" , "none");
+            setGameValues();
+        })
+
+        $($protector).on("dblclick", function(){
+            $($protector).css("display" , "none")
+        })
+
+        //presenting info
+        $score=$("#score");
+        $turn = $("#turn");
+        $turn.text(`Player's turn : ${arrayGameInfo[currentPlayer].playerName}`);
+
+        $arrayPositions=$(".position");
+        for (let $position of $arrayPositions){
+            //testing $($position).text(($($position).attr("id")).substring(8,11));
+        }
+
+        //refact
+        $("#position039").css("background-image","url('images/trollYel.jpg')");
+        $("#position022").css("background-image","url('images/trollBlu.jpg')");
+        $("#position056").css("background-image","url('images/trollGre.jpg')");
+        $("#position005").css("background-image","url('images/trollRed.jpg')");
+
+        $("#position039, #position022, #position056, #position005").data({'trap':"troll"});
+
+        $("#position075, #position089").css("background-image","url('images/bridge2.jpg')");
+        $("#position082, #position096").css("background-image","url('images/bridge.jpg')");
+
+        $("#hPlayerYel").text(arrayGameInfo[0].playerName);
+        $("#hPlayerBlu").text(arrayGameInfo[1].playerName);
+        $("#hPlayerGre").text(arrayGameInfo[2].playerName);
+        $("#hPlayerRed").text(arrayGameInfo[3].playerName);
     }
-    // getting players name
-    for (i=1; i<=4; i++){
-        arrayGameInfo[i-1].playerName=((prompt(`Player ${i} name`, `Player ${i}`)) + "'s KINGDOM").toUpperCase();
-    }
 
-    presentGameStatus();
-    // adding the events
-    $("#rollDices").on("click", function(){
-        rollDices();
+    socket.on('start game!', () => {
+        console.log('can we get a move on')     
+        load_game()
     });
 
-    let $arrayPieces=$(".pieces");
-    for (let $pieceIndex of $arrayPieces){
-        $($pieceIndex).on("click", function(){
-            checkMovement($($pieceIndex))  ;
-        });
+    const mainEl = (el) => document.querySelector(el);
+    const createEl = (el) => document.createElement(el);
+    const getEls = (els) => document.getElementsByClassName(els);
+    
+    function count_inuse(arr){
+        let count = 0;
+        for (let obj of arr){
+            const list = Object.keys(obj);
+            for (let it of list){
+                if (it === 'inUse'){
+                    if (obj[it]) count++;
+                }
+            }
+        }
+        return count;
     }
 
-    $($myModal).on("click", function(){
-        $($myModal).css("display" , "none");
-        setGameValues();
-    })
+    function load_modal(){
+        const coverPage = createEl('div');
+        coverPage.style.backgroundImage = "url('../media/cover.png')";
+        coverPage.style.backgroundRepeat = "no-repeat";
+        coverPage.style.backgroundSize = "cover";
+        coverPage.style.height = "100%";
+        coverPage.style.width = "100%";
 
-    $($protector).on("dblclick", function(){
-        $($protector).css("display" , "none")
-    })
+        const modal = createEl('div');
+        modal.setAttribute('class', 'modal');
 
-    //presenting info
-    $score=$("#score");
-    $turn = $("#turn");
-    $turn.text(`Player's turn : ${arrayGameInfo[currentPlayer].playerName}`);
+        const coverForm = createEl('div');
+        coverForm.setAttribute('class', 'modal-content');
 
-    $arrayPositions=$(".position");
-    for (let $position of $arrayPositions){
-        //testing $($position).text(($($position).attr("id")).substring(8,11));
+        const welcome = createEl('h2');
+        welcome.innerText = `Welcome ${username}! \n Please choose a kingdom`;
+        coverForm.appendChild(welcome);
+
+        const player1 = createEl('p');
+        player1.onclick = (e) => assign_kingdom(e);
+        player1.innerText = 'Yellow Kingdom:';
+        player1.innerHTML += `<button class="kingdomChoice" id="${arrayGameInfo[0].playerId}" value="0">CHOOSE</button>`;
+        coverForm.appendChild(player1);
+
+        const player2 = createEl('p');
+        player2.onclick = (e) => assign_kingdom(e);
+        player2.innerText = 'Blue Kingdom:';
+        player2.innerHTML += `<button class="kingdomChoice" id="${arrayGameInfo[1].playerId}" value="1">CHOOSE</button>`;
+        coverForm.appendChild(player2);
+
+        const player3 = createEl('p');
+        player3.onclick = (e) => assign_kingdom(e);
+        player3.innerText = 'Green Kingdom:';
+        player3.innerHTML += `<button class="kingdomChoice" id="${arrayGameInfo[2].playerId}" value="2">CHOOSE</button>`;
+        coverForm.appendChild(player3);
+
+        const player4 = createEl('p');
+        player4.onclick = (e) => assign_kingdom(e);
+        player4.innerText = 'Red Kingdom:';
+        player4.innerHTML += `<button class="kingdomChoice" id="${arrayGameInfo[3].playerId}" value="3">CHOOSE</button>`;
+        coverForm.appendChild(player4);
+
+        if (isHost && count_inuse(arrayGameInfo) === connections){
+            const submit = document.createElement('button');
+            submit.innerText = 'START';
+            submit.onclick = () => {
+                socket.emit('start game!');
+            }
+
+            coverForm.appendChild(submit);
+        } 
+
+        modal.appendChild(coverForm);
+        coverPage.appendChild(modal);
+        mainEl(".mainDiv").innerHTML = "";
+        mainEl(".mainDiv").appendChild(coverPage);
     }
 
-    //refact
-    $("#position039").css("background-image","url('images/trollYel.jpg')");
-    $("#position022").css("background-image","url('images/trollBlu.jpg')");
-    $("#position056").css("background-image","url('images/trollGre.jpg')");
-    $("#position005").css("background-image","url('images/trollRed.jpg')");
+    function assign_kingdom(e){
+        const val = e.target.value;
 
-    $("#position039, #position022, #position056, #position005").data({'trap':"troll"});
+        arrayGameInfo[val].playerName=(name + "'s KINGDOM").toUpperCase(); 
+        arrayGameInfo[val].inUse=true; 
+        // mainEl('.joinGame').innerHTML = "Wait for host...";
+        load_modal();
 
-    $("#position075, #position089").css("background-image","url('images/bridge2.jpg')");
-    $("#position082, #position096").css("background-image","url('images/bridge.jpg')");
-
-    $("#hPlayerYel").text(arrayGameInfo[0].playerName);
-    $("#hPlayerBlu").text(arrayGameInfo[1].playerName);
-    $("#hPlayerGre").text(arrayGameInfo[2].playerName);
-    $("#hPlayerRed").text(arrayGameInfo[3].playerName);
+        // if (isHost && count_inuse(arrayGameInfo) === conns) {
+        //     arrayGameInfo[0].playerName=(name + "'s KINGDOM").toUpperCase(); 
+        //     arrayGameInfo[0].inUse=true; 
+        //     mainEl('.joinGame').innerHTML = "Wait for host...";
+        //     load_modal(name, conns);
+        // } 
+        // else {
+        //     arrayGameInfo[position-1].playerName=(name + "'s KINGDOM").toUpperCase(); 
+        //     arrayGameInfo[position-1].inUse=true; 
+        //     mainEl('.joinGame').innerHTML = "Wait for host...";
+        //     load_modal(name, position-1, conns);
+        // }
+    }
+    load_modal();
 }
+socket.on('random player', (randomPlayer, startingPlayer, connections) => onload(randomPlayer, startingPlayer, connections));
 
 function checkWinner(player){
     let $piecesInCastle=$(`#posSquare3 > .${player}`);
@@ -395,7 +523,11 @@ function retreatPieces(player,$position,$movingPiece){
 ////refactcreating elements for the board
 function createBoard(){
     let index=0;
+    
     let $element=$("#mainDiv");
+    // clear board
+    $element.empty();
+
     let $playerImg;
 
     //left bar

@@ -8,6 +8,14 @@
     background-color: transparent;
 }
 
+html {
+    height: 100vh;
+}
+
+body {
+    height: 100%;
+}
+
 @media  (max-width: 500px) {
     body {
         height: 500px;
